@@ -15,7 +15,7 @@
     "gen:run": "node --env-file=.env scripts/dist",
     "gen": "run-s gen:build gen:run",
     "lint": "eslint . --fix",
-    "format": "prettier --write src/ scripts/ public/posts/"
+    "format": "prettier --write src/ scripts/"
   },
   "dependencies": {
     "@octokit/rest": "^21.0.2",
