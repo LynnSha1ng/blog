@@ -52,3 +52,21 @@ $scr-h-without-top-nav: calc(100dvh - 60px - 12px * 2);
     }
   }
 }
+
+@mixin staggered-transition-time-manage(
+  $type,
+  $child-count,
+  $child-duration,
+  $child-delay
+) {
+  @if $type == 'root' {
+    transition-duration: ($child-count - 1) * $child-delay + $child-duration;
+  } @else if $type == 'child' {
+    @for $i from 1 through $child-count {
+      &:nth-child(#{$i}) {
+        transition-duration: $child-duration;
+        transition-delay: ($i - 1) * $child-delay;
+      }
+    }
+  }
+}
