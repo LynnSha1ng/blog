@@ -6,6 +6,7 @@
     "declaration": false,
     "rootDir": "./scripts",
     "outDir": "./scripts/dist",
+    "target": "ESNext",
     "module": "ESNext",
     "moduleResolution": "Bundler",
   }
