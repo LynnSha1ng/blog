@@ -40,6 +40,7 @@ const navConfig: NavConfig = {
 
 <style lang="scss">
 .blog-main {
+  overflow: hidden;
   min-height: $scr-h-without-top-nav;
 }
 </style>
