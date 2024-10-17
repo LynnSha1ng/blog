@@ -11,13 +11,13 @@ function setCodeStyle() {
       link = document.createElement('link');
       link.rel = 'stylesheet';
       link.id = 'highlight-theme';
-      document.head.appendChild(link);
     }
 
     const cssTheme = dark
-      ? 'highlight.js/styles/github-dark.min.css'
-      : 'highlight.js/styles/github.min.css';
+      ? '../assets/github-dark.min.css'
+      : '../assets/github.min.css';
     link.href = new URL(cssTheme, import.meta.url).href;
+    document.head.appendChild(link);
   };
   const mediaQueryDark = matchMedia('(prefers-color-scheme: dark)');
   applyTheme(mediaQueryDark.matches);
