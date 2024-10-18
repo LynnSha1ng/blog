@@ -1,5 +1,5 @@
 <template>
-  <BlogNav :="navConfig" />
+  <BlogNav :title :itemsMid />
 
   <main class="blog-main">
     <Suspense>
@@ -10,32 +10,21 @@
 </template>
 
 <script setup lang="ts">
-import BlogNav, { type NavConfig } from '@/components/BlogNav.vue';
+import BlogNav from '@/components/BlogNav.vue';
 
-const navConfig: NavConfig = {
-  title: "LynnSha1ng's Blog",
-  items: {
-    labeled: [
-      {
-        label: '标签',
-        iconClass: 'icon-24gf-tags2',
-        to: { name: 'tags' },
-      },
-      {
-        label: '分类',
-        iconClass: 'icon-boxtag-fill',
-        to: { name: 'categories' },
-      },
-    ],
-    unlabeled: [
-      {
-        label: '测试',
-        iconClass: 'icon-boxtag-fill',
-        to: { name: 'tags' },
-      },
-    ],
+const title = "LynnSha1ng's Blog";
+const itemsMid = [
+  {
+    label: '标签',
+    iconClass: 'icon-24gf-tags2',
+    to: { name: 'tags' },
   },
-};
+  {
+    label: '分类',
+    iconClass: 'icon-boxtag-fill',
+    to: { name: 'categories' },
+  },
+];
 </script>
 
 <style lang="scss">

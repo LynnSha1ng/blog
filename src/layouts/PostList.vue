@@ -2,6 +2,10 @@
   <div
     class="post-list-wrapper"
     :key="`post-list-${currentCriterionName ?? 'all'}-${currentPage}`">
+    <h1 v-show="listTitle">
+      {{ listTitle }}
+      <hr class="border-grey" />
+    </h1>
     <ul :class="['post-list', `--${itemStyle}`]">
       <PostListItem
         :data="item"
@@ -36,11 +40,13 @@ const criterion = (() => {
   const routeName = route.name!.toString().toLowerCase();
   if (routeName.includes('category')) return 'cate';
   else if (routeName.includes('tag')) return 'tag';
+  else return void 0;
 })();
 const stat = await fetchStat();
 
 let currentTotal: MaybeRefOrGetter<number>;
 let currentCriterionName: ComputedRef<string>;
+let listTitle: string;
 let fetchData: (params: {
   index: number;
   total: number;
@@ -51,11 +57,20 @@ if (withCriterion) {
   currentCriterionName = computed(
     () => route.params[route.name!.toString().substring(1)] as string,
   );
+
+  listTitle = (() => {
+    const criterionTitle =
+      criterion === 'cate' ? '分类' : criterion === 'tag' ? '标签' : void 0;
+    return `${criterionTitle} - ${currentCriterionName.value}`;
+  })();
+
   currentTotal = computed(() => stat[criterion!][currentCriterionName.value]);
+
   fetchData = ({ index, total, criterionName }) =>
     onPageChange(criterionName, index, total);
 } else {
   currentTotal = stat.total.post ?? 0;
+
   fetchData = ({ index, total }) => onPageChange(index, total);
 }
 

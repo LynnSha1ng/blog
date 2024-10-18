@@ -39,12 +39,16 @@
           </span>
           <ul class="tags" v-show="$route.name !== ':tagName'">
             <i class="meta-icon iconfont icon-24gf-tags2"></i>
-            <li
-              class="tag"
+            <RouterLink
               v-for="tagItem in tag"
-              :key="`post-tag-${name}-${tagItem}`">
-              {{ tagItem }}
-            </li>
+              :key="`post-tag-${name}-${tagItem}`"
+              custom
+              :to="{ name: ':tagName', params: { tagName: tagItem } }"
+              v-slot="{ navigate }">
+              <li class="tag" @click="navigate" role="link">
+                {{ tagItem }}
+              </li>
+            </RouterLink>
           </ul>
         </div>
       </div>
@@ -54,23 +58,6 @@
 
 <script setup lang="ts">
 /* global Blog */
-
-/*
-  [@vue/compiler-sfc] Unresolvable type reference or unsupported built-in utility type
- 
-  C:/Users/a/Desktop/blog/src/components/PostListItem.vue
-  58 |
-  59 |  defineProps<
-  60 |    Blog.Post.Meta & {
-     |    ^^^^^^^^^^^^^^
-  61 |      itemStyle: 'detailed' | 'brief';
-  62 |    }
-*/
-// defineProps<
-//   Blog.Post.Meta & {
-//     itemStyle: 'detailed' | 'brief';
-//   }
-// >();
 
 const { data } = defineProps<{
   data: Blog.Post.Meta;
@@ -88,7 +75,6 @@ import { formatDate } from '@/utils/tool';
   max-width: 520px;
   border-radius: 12px;
   background-color: var(--bg-2);
-  cursor: pointer;
 
   @include screenBelow($xl2) {
     max-width: none;
@@ -143,7 +129,7 @@ import { formatDate } from '@/utils/tool';
   &.--brief {
     @include flex;
     column-gap: 8px;
-    height: 120px;
+    min-height: 120px;
     padding: 8px;
 
     .post-cover {
@@ -170,7 +156,21 @@ import { formatDate } from '@/utils/tool';
     }
 
     .tags {
-      @include flex;
+      @include flex(null, center, wrap);
+      gap: 8px;
+    }
+
+    .tag {
+      padding-inline: 8px;
+      border-radius: 1em;
+      background-color: var(--bg-3);
+      transition-property: background-color, color;
+      transition-duration: 0.35s;
+
+      &:hover {
+        background-color: var(--bg-4);
+        color: var(--primary);
+      }
     }
   }
 }

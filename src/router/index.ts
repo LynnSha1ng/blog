@@ -20,14 +20,19 @@ const router = createRouter({
       ],
     },
   ],
-  scrollBehavior(_to, _from, savedPosition) {
+  scrollBehavior(to, _from, savedPosition) {
     if (savedPosition) {
       return savedPosition;
     }
 
+    const routeNoSmooth = [':postName'];
+    const behavior = routeNoSmooth.includes(to.name!.toString())
+      ? 'auto'
+      : 'smooth';
+
     return {
       top: 0,
-      behavior: 'smooth',
+      behavior,
     };
   },
 });

@@ -17,6 +17,16 @@
   }
 }
 
+.border-grey {
+  border-color: var(--text-grey);
+}
+
+.screen-mask{
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
 .marked-emoji {
   width: 1em;
   height: 1em;

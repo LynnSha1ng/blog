@@ -1,26 +1,7 @@
 <template>
   <Transition appear name="side-card-appear">
     <TransitionGroup name="card-toggle" tag="aside" class="side-info">
-      <div class="info-card --blogger" key="side-card-blogger">
-        <img class="avatar" src="/images/avatar.jpg" alt="头像" />
-        <h3 class="blogger-name">临郢夏望</h3>
-        <span class="bio">谦逊对待未知</span>
-        <ul class="post-stats">
-          <li
-            class="stat-item"
-            v-for="(label, key) of statMap"
-            :key="`side-card-stat-${key}`">
-            <div class="stat-label">{{ label }}</div>
-            <div class="stat-total">{{ total[key] ?? '*' }}</div>
-          </li>
-        </ul>
-        <ul class="contacts">
-          <li class="contact-icon iconfont icon-QQ"></li>
-          <li class="contact-icon iconfont icon-mail"></li>
-          <li class="contact-icon iconfont icon-github"></li>
-          <li class="contact-icon iconfont icon-tuite"></li>
-        </ul>
-      </div>
+      <BloggerCard key="side-card-blogger" />
 
       <div
         class="info-card"
@@ -28,8 +9,9 @@
         key="side-card-categories">
         <h3>
           <i class="title-icon iconfont icon-wenjianjia"></i>
-          <span class="card-title">分类</span>
+          <span class="title-cont">分类</span>
         </h3>
+
         <ul class="categories" v-if="cate">
           <RouterLink
             v-for="[label, total] of cateShown"
@@ -47,14 +29,8 @@
               <span class="category-total">（{{ total }}）</span>
             </li>
           </RouterLink>
-
-          <li class="category-item">
-            <span class="category-label">
-              测试超级长的分类名字测试超极长的分类名字
-            </span>
-            <span class="category-total">（10）</span>
-          </li>
         </ul>
+
         <RouterLink
           :to="{ name: 'categories' }"
           class="has-more"
@@ -69,8 +45,9 @@
         key="side-card-tags">
         <h3>
           <i class="title-icon iconfont icon-24gf-tags2"></i>
-          <span class="card-title">标签</span>
+          <span class="title-cont">标签</span>
         </h3>
+
         <ul class="tags" v-if="tag">
           <RouterLink
             v-for="[label, total] of tagShown"
@@ -89,6 +66,7 @@
             </li>
           </RouterLink>
         </ul>
+
         <RouterLink :to="{ name: 'tags' }" class="has-more" v-show="tagHasMore">
           查看更多
         </RouterLink>
@@ -97,14 +75,14 @@
       <div class="info-card" key="side-card-link-exchange">
         <h3>
           <i class="title-icon iconfont icon-youlian-f"></i>
-          <span class="card-title">友链</span>
+          <span class="title-cont">友链</span>
         </h3>
       </div>
 
       <div class="info-card" key="side-card-title">
         <h3>
           <i class="title-icon iconfont icon-caidan"></i>
-          <span class="card-title">标题</span>
+          <span class="title-cont">标题</span>
         </h3>
       </div>
     </TransitionGroup>
@@ -112,15 +90,11 @@
 </template>
 
 <script setup lang="ts">
+import BloggerCard from './BloggerCard.vue';
+
 import { fetchStat } from '@/api';
 
-const statMap = {
-  post: '文章',
-  cate: '分类',
-  tag: '标签',
-};
-
-const { total, cate, tag } = await fetchStat();
+const { cate, tag } = await fetchStat();
 const getShownData = (raw: Record<string, number>, shownCount: number) => {
   let shownData: [string, number][] | undefined = void 0;
   let hasMore: boolean = false;
@@ -157,59 +131,14 @@ const { shownData: tagShown, hasMore: tagHasMore } = getShownData(tag, 2);
   padding: 20px;
   border-radius: 12px;
   background-color: var(--bg-2);
-
-  &.--blogger {
-    align-items: center;
-  }
 }
 
-.card-title {
+.title-cont {
   margin-inline-start: 4px;
 }
 
 .title-icon {
   font-size: 1.08em;
-}
-
-.avatar {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-}
-
-.bio {
-  color: var(--text-grey);
-  font-size: small;
-}
-
-.post-stats {
-  @include flex(space-around);
-  width: 100%;
-  margin-top: 8px;
-}
-
-.stat-item {
-  text-align: center;
-}
-
-.stat-label {
-  margin-block-end: 8px;
-  font-size: small;
-}
-
-.stat-total {
-  font-size: large;
-  font-weight: bold;
-}
-
-.contacts {
-  @include flex;
-  gap: 20px;
-}
-
-.contact-icon {
-  font-size: 1.5em;
-  cursor: pointer;
 }
 
 .categories {
@@ -223,7 +152,6 @@ const { shownData: tagShown, hasMore: tagHasMore } = getShownData(tag, 2);
   border-radius: 8px;
   font-weight: bold;
   transition: background-color 0.25s;
-  cursor: pointer;
 
   &:hover {
     background-color: var(--bg-3);
@@ -235,7 +163,7 @@ const { shownData: tagShown, hasMore: tagHasMore } = getShownData(tag, 2);
 }
 
 .tags {
-  @include flex(null, null, row wrap);
+  @include flex(null, null, wrap);
   gap: 8px;
 }
 
@@ -243,7 +171,6 @@ const { shownData: tagShown, hasMore: tagHasMore } = getShownData(tag, 2);
   padding: 8px;
   border-radius: 8px;
   transition: background-color 0.25s;
-  cursor: pointer;
 
   &:hover {
     background-color: var(--bg-3);
@@ -311,17 +238,18 @@ $child-delay: 0.1s;
 .card-toggle-enter-active,
 .card-toggle-leave-active {
   transition-property: opacity, transform;
-  transition-duration: 0.5s;
+  transition-duration: 0.35s;
 }
 
 .card-toggle-enter-from,
 .card-toggle-leave-to {
   opacity: 0;
-  transform: scale(0);
+  transform: scale(0.8);
 }
 
 // 从文档流中移除离开的元素以保障move动画
 .card-toggle-leave-active {
   position: absolute;
+  top: 300px;
 }
 </style>

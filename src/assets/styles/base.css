@@ -36,6 +36,17 @@ code {
   overflow-wrap: break-word;
 }
 
+[role='link'] {
+  cursor: pointer;
+}
+
+button {
+  padding: 0;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+}
+
 html {
   font-size: 16px;
 }

@@ -39,13 +39,14 @@ const { ready, atPostPage } = storeToRefs(postStore);
 
 <style lang="scss" scoped>
 .post-banner {
+  position: relative;
   overflow: hidden;
   opacity: 0;
   height: 0;
   transition-property: height, opacity;
   transition-duration: 0.45s;
   transition-delay: -0.1s;
-  contain: content;
+  will-change: height, opacity;
 
   &.--shown {
     opacity: 1;

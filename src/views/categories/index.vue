@@ -1,5 +1,5 @@
 <template>
-  <GroupingPage criterion="category"></GroupingPage>
+  <GroupingPage criterion="category" />
 </template>
 
 <script setup lang="ts">

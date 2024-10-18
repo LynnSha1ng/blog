@@ -1,7 +1,9 @@
 <template>
   <div class="grouping-page" v-if="$route.name === nameMap[criterion][0]">
-    <h1 class="page-title">所有{{ nameMap[criterion][2] }}</h1>
-    <hr class="border" />
+    <h1 class="page-title">
+      所有{{ nameMap[criterion][2] }}
+      <hr class="border-grey" />
+    </h1>
     <ul class="items">
       <RouterLink
         v-for="(total, label) in stat[nameMap[criterion][3] as keyof Blog.Stat]"
@@ -56,14 +58,13 @@ const stat = await fetchStat();
   pointer-events: none;
 }
 
-.border {
-  margin-block: 1.5em;
-  border-color: var(--text-grey);
-}
-
 .items {
   display: grid;
   grid-template-columns: repeat(2, minmax(5em, 1fr));
+
+  @include screenBelow($xs) {
+    grid-template-columns: 1fr;
+  }
 }
 
 .item {
@@ -73,7 +74,6 @@ const stat = await fetchStat();
   font-size: large;
   transition-property: background-color, color;
   transition-duration: 0.25s;
-  cursor: pointer;
 
   &:hover {
     background-color: var(--bg-3);

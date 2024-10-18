@@ -3,9 +3,9 @@
     <template v-if="Component">
       <PostCover />
       <div class="blog-content">
-        <SideCard />
+        <SideCards />
         <Transition name="fade-slide-y" mode="out-in">
-          <component :is="Component" class="pos-right-fill"></component>
+          <component :is="Component" class="pos-right-fill" />
         </Transition>
       </div>
     </template>
@@ -14,7 +14,7 @@
 
 <script setup lang="ts">
 import PostCover from '@/components/PostCover.vue';
-import SideCard from '@/components/SideCard.vue';
+import SideCards from '@/components/SideCards.vue';
 </script>
 
 <style lang="scss">
