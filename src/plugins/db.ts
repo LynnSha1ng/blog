@@ -3,12 +3,12 @@ import type { EntityTable, Table } from 'dexie';
 import Dexie from 'dexie';
 
 const db = new Dexie('Blog') as Dexie & {
-  post: EntityTable<Blog.Post.DBItem, 'name'>;
+  post: EntityTable<Blog.Post.DBItem, 'id'>;
   pagination: Table<Blog.Pagination, [string, number]>;
 };
 
 db.version(1).stores({
-  post: 'name, category, *tag, birthTime, metaVer',
+  post: '++id, &name, category, *tag, birthTime, metaVer',
   pagination: '[mark+index], firstEntry, ver',
 });
 

@@ -2,7 +2,11 @@ import type { Collection, InsertType, PromiseExtended } from 'dexie';
 import type { ResponseWithCancelFn } from '@/utils/tool';
 
 import { db } from '@/plugins/db';
-import { localStorageUtils, promiseWithCancelFn } from '@/utils/tool';
+import {
+  randomIntInRange,
+  localStorageUtils,
+  promiseWithCancelFn,
+} from '@/utils/tool';
 
 const currentResVer = parseInt(import.meta.env.VITE_RESOURCE_VER);
 const LIMIT = parseInt(import.meta.env.VITE_LIST_LIMIT);
@@ -85,30 +89,32 @@ function _fetchData<T>(
   }
   //IndexedDB
   return promiseWithCancelFn<T>(
-    query!().then((postObj: T & { [K in Blog.Post.VerKey]?: number }) => {
-      if (postObj && postObj[verKeyDB] === currentResVer) {
-        // console.log('使用最新IndexedDB数据');
-        const { metaVer, contVer, ...data } = postObj;
-        return <T>data;
-      }
-      // console.log('Indexed数据不存在或非最新，使用fetch');
-      const { response } = _fetch<T>(url);
-      return response.then(async data => {
-        if (!data) return void 0;
-
-        let dataToStore: typeof postObj;
-        if (postObj) {
-          dataToStore = Object.assign(postObj, data);
-        } else {
-          dataToStore = data;
+    query!().then(
+      (postObj: T & { id: number } & { [K in Blog.Post.VerKey]?: number }) => {
+        if (postObj && postObj[verKeyDB] === currentResVer) {
+          // console.log('使用最新IndexedDB数据');
+          const { id, metaVer, contVer, ...data } = postObj;
+          return <T>data;
         }
-        dataToStore[verKeyDB] = currentResVer;
-        await db.post.put(
-          dataToStore as unknown as InsertType<Blog.Post.DBItem, 'name'>,
-        );
-        return data;
-      });
-    }),
+        // console.log('Indexed数据不存在或非最新，使用fetch');
+        const { response } = _fetch<T>(url);
+        return response.then(async data => {
+          if (!data) return void 0;
+
+          let dataToStore: T & { [K in Blog.Post.VerKey]?: number };
+          if (postObj) {
+            dataToStore = Object.assign(postObj, data);
+          } else {
+            dataToStore = data;
+          }
+          dataToStore[verKeyDB] = currentResVer;
+          await db.post.put(
+            dataToStore as unknown as InsertType<Blog.Post.DBItem, 'id'>,
+          );
+          return data;
+        });
+      },
+    ),
     // () => console.log('取消IndexedDB查询'),
   );
 }
@@ -163,8 +169,8 @@ async function _fetchSinglePage(
 
     let collection: Collection<
       Blog.Post.DBItem,
-      string,
-      InsertType<Blog.Post.DBItem, 'name'>
+      number,
+      InsertType<Blog.Post.DBItem, 'id'>
     >;
     let result: Blog.Post.DBItem[];
 
@@ -237,7 +243,7 @@ export async function fetchStat(): Promise<Blog.Stat> {
 function _fetchPostMeta(name: string) {
   return _fetchData<Blog.Post.Meta>(`data/info/${name}.json`, {
     localSrc: 'IndexedDB',
-    query: () => db.post.get(name),
+    query: () => db.post.get({ name }),
     resAffected: 'meta',
   });
 }
@@ -254,14 +260,23 @@ export async function fetchWholePost(name: string): Promise<Blog.Post.Whole> {
     cont: string;
   }>(`data/cont/${name}.json`, {
     localSrc: 'IndexedDB',
-    query: () => db.post.get(name),
+    query: () => db.post.get({ name }),
     resAffected: 'cont',
   });
   const contData = await contRes;
+  if (!contData) {
+    throw new Error('未获取到文章内容');
+  }
   return {
     ...info,
-    cont: contData?.cont ?? '',
+    cont: contData.cont,
   };
+}
+
+export async function fetchRandomPostName() {
+  const { total } = await fetchStat();
+  const randomPost = await db.post.get(randomIntInRange(1, total.post ?? 1));
+  return randomPost?.name;
 }
 
 export function fetchAllPosts(

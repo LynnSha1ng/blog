@@ -1,4 +1,5 @@
 interface _PostDataAll {
+  id: number;
   name: string;
   title: string;
   description: string;
@@ -19,7 +20,7 @@ declare global {
 
       type DBItem = Optional<_PostDataAll, 'cont' | 'contVer'>;
 
-      type Whole = Omit<_PostDataAll, VerKey>;
+      type Whole = Omit<_PostDataAll, 'id' | VerKey>;
 
       type Meta = Omit<Whole, 'cont'>;
     }

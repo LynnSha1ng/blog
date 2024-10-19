@@ -181,6 +181,7 @@ import { formatDate } from '@/utils/tool';
 
 .post-title {
   @include line-clamp(2);
+  text-wrap: balance;
 }
 
 .post-desc {

@@ -83,6 +83,7 @@ const stat = await fetchStat();
 
 .label {
   @include line-clamp(2);
+  text-wrap: balance;
 }
 
 .total {
