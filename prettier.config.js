@@ -11,5 +11,6 @@ export default {
   bracketSameLine: true,
   arrowParens: 'avoid',
   vueIndentScriptAndStyle: false,
+  endOfLine: 'auto',
   singleAttributePerLine: false,
 };
