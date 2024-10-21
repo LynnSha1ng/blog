@@ -1,0 +1,120 @@
+@font-face {
+  font-family: 'iconfont';
+  src:
+    url('../fonts/iconfont.woff2') format('woff2'),
+    url('../fonts/iconfont.woff') format('woff'),
+    url('../fonts/iconfont.ttf') format('truetype');
+}
+
+.iconfont {
+  font-family: 'iconfont' !important;
+  font-size: 1rem;
+  font-style: normal;
+  vertical-align: middle;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-calendar:before {
+  content: '\e667';
+}
+
+.icon-discount:before {
+  content: '\e66d';
+}
+
+.icon-edit:before {
+  content: '\e66e';
+}
+
+.icon-work:before {
+  content: '\e683';
+}
+
+.icon-arrow-left-bold:before {
+  content: '\e685';
+}
+
+.icon-arrow-up-bold:before {
+  content: '\e686';
+}
+
+.icon-arrow-down-bold:before {
+  content: '\e687';
+}
+
+.icon-arrow-right-bold:before {
+  content: '\e688';
+}
+
+.icon-quxiao:before {
+  content: '\e64a';
+}
+
+.icon-youlian-f:before {
+  content: '\e7df';
+}
+
+.icon-touzi:before {
+  content: '\e612';
+}
+
+.icon-wenjianjia:before {
+  content: '\e601';
+}
+
+.icon-wenzhang2:before {
+  content: '\e681';
+}
+
+.icon-sousuo:before {
+  content: '\e635';
+}
+
+.icon-boxtag-fill:before {
+  content: '\e653';
+}
+
+.icon-telegram:before {
+  content: '\e8db';
+}
+
+.icon-QQ:before {
+  content: '\e882';
+}
+
+.icon-caidan:before {
+  content: '\eaf1';
+}
+
+.icon-24gf-tags2:before {
+  content: '\e887';
+}
+
+.icon-yonghu:before {
+  content: '\e60e';
+}
+
+.icon-guanyu:before {
+  content: '\e622';
+}
+
+.icon-github:before {
+  content: '\e645';
+}
+
+.icon-mail:before {
+  content: '\e60d';
+}
+
+.icon-discord:before {
+  content: '\e600';
+}
+
+.icon-a-smlsicon_zhuti:before {
+  content: '\e60b';
+}
+
+.icon-tuite:before {
+  content: '\e60a';
+}
