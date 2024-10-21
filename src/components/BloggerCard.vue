@@ -65,6 +65,7 @@ const statMap = {
 
 .stat-item {
   text-align: center;
+  pointer-events: none;
 }
 
 .stat-label {

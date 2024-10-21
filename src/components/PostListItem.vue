@@ -24,21 +24,21 @@
         </p>
         <div class="post-meta">
           <span class="publish-time">
-            <i class="meta-icon iconfont icon-caidan"></i>
+            <i class="meta-icon iconfont icon-calendar"></i>
             <span class="time-txt">发表于</span>
             <time :datetime="birthTime">{{ formatDate(birthTime) }}</time>
           </span>
           <span class="last-modify-time">
-            <i class="meta-icon iconfont icon-caidan"></i>
+            <i class="meta-icon iconfont icon-edit"></i>
             <span class="time-txt">最后修改于</span>
             <time :datetime="mTime">{{ formatDate(mTime) }}</time>
           </span>
           <span class="category" v-show="$route.name !== ':categoryName'">
-            <i class="meta-icon iconfont icon-boxtag-fill"></i>
-            {{ category }}
+            <i class="meta-icon iconfont icon-work"></i>
+            <span class="category-label">{{ category }}</span>
           </span>
           <ul class="tags" v-show="$route.name !== ':tagName'">
-            <i class="meta-icon iconfont icon-24gf-tags2"></i>
+            <i class="meta-icon iconfont icon-discount"></i>
             <RouterLink
               v-for="tagItem in tag"
               :key="`post-tag-${name}-${tagItem}`"
@@ -157,19 +157,17 @@ import { formatDate } from '@/utils/tool';
 
     .tags {
       @include flex(null, center, wrap);
-      gap: 8px;
+      row-gap: 8px;
     }
 
     .tag {
+      margin-inline-end: 8px;
       padding-inline: 8px;
       border-radius: 1em;
       background-color: var(--bg-3);
-      transition-property: background-color, color;
-      transition-duration: 0.35s;
 
       &:hover {
         background-color: var(--bg-4);
-        color: var(--primary);
       }
     }
   }
@@ -182,10 +180,12 @@ import { formatDate } from '@/utils/tool';
 .post-title {
   @include line-clamp(2);
   text-wrap: balance;
+  cursor: auto;
 }
 
 .post-desc {
   margin: 0;
+  cursor: auto;
 }
 
 .post-meta {
@@ -195,5 +195,27 @@ import { formatDate } from '@/utils/tool';
 
 .meta-icon {
   margin-inline-end: 4px;
+}
+
+.publish-time,
+.last-modify-time {
+  cursor: auto;
+}
+
+.category-label {
+  transition: color 0.35s;
+
+  &:hover {
+    color: var(--primary);
+  }
+}
+
+.tag {
+  transition-property: background-color, color;
+  transition-duration: 0.35s;
+
+  &:hover {
+    color: var(--primary);
+  }
 }
 </style>

@@ -15,14 +15,14 @@ import BlogNav from '@/components/BlogNav.vue';
 const title = "LynnSha1ng's Blog";
 const itemsMid = [
   {
-    label: '标签',
-    iconClass: 'icon-24gf-tags2',
-    to: { name: 'tags' },
-  },
-  {
     label: '分类',
     iconClass: 'icon-boxtag-fill',
     to: { name: 'categories' },
+  },
+  {
+    label: '标签',
+    iconClass: 'icon-24gf-tags2',
+    to: { name: 'tags' },
   },
 ];
 </script>

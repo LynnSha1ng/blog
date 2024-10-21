@@ -15,106 +15,122 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-.icon-calendar:before {
+.icon-arrow-double-left::before {
+  content: '\e665';
+}
+
+.icon-arrow-double-right::before {
+  content: '\e666';
+}
+
+.icon-text::before {
+  content: '\e680';
+}
+
+.icon-time::before {
+  content: '\e682';
+}
+
+.icon-calendar::before {
   content: '\e667';
 }
 
-.icon-discount:before {
+.icon-discount::before {
   content: '\e66d';
 }
 
-.icon-edit:before {
+.icon-edit::before {
   content: '\e66e';
 }
 
-.icon-work:before {
+.icon-work::before {
   content: '\e683';
 }
 
-.icon-arrow-left-bold:before {
+.icon-arrow-left-bold::before {
   content: '\e685';
 }
 
-.icon-arrow-up-bold:before {
+.icon-arrow-up-bold::before {
   content: '\e686';
 }
 
-.icon-arrow-down-bold:before {
+.icon-arrow-down-bold::before {
   content: '\e687';
 }
 
-.icon-arrow-right-bold:before {
+.icon-arrow-right-bold::before {
   content: '\e688';
 }
 
-.icon-quxiao:before {
+.icon-quxiao::before {
   content: '\e64a';
 }
 
-.icon-youlian-f:before {
+.icon-youlian-f::before {
   content: '\e7df';
 }
 
-.icon-touzi:before {
+.icon-touzi::before {
   content: '\e612';
 }
 
-.icon-wenjianjia:before {
+.icon-wenjianjia::before {
   content: '\e601';
 }
 
-.icon-wenzhang2:before {
+.icon-wenzhang2::before {
   content: '\e681';
 }
 
-.icon-sousuo:before {
+.icon-sousuo::before {
   content: '\e635';
 }
 
-.icon-boxtag-fill:before {
+.icon-boxtag-fill::before {
   content: '\e653';
 }
 
-.icon-telegram:before {
+.icon-telegram::before {
   content: '\e8db';
 }
 
-.icon-QQ:before {
+.icon-QQ::before {
   content: '\e882';
 }
 
-.icon-caidan:before {
+.icon-caidan::before {
   content: '\eaf1';
 }
 
-.icon-24gf-tags2:before {
+.icon-24gf-tags2::before {
   content: '\e887';
 }
 
-.icon-yonghu:before {
+.icon-yonghu::before {
   content: '\e60e';
 }
 
-.icon-guanyu:before {
+.icon-guanyu::before {
   content: '\e622';
 }
 
-.icon-github:before {
+.icon-github::before {
   content: '\e645';
 }
 
-.icon-mail:before {
+.icon-mail::before {
   content: '\e60d';
 }
 
-.icon-discord:before {
+.icon-discord::before {
   content: '\e600';
 }
 
-.icon-a-smlsicon_zhuti:before {
+.icon-a-smlsicon_zhuti::before {
   content: '\e60b';
 }
 
-.icon-tuite:before {
+.icon-tuite::before {
   content: '\e60a';
 }

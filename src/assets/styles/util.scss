@@ -26,6 +26,12 @@ $scr-h-without-top-nav: calc(100dvh - 60px - 12px * 2);
   }
 }
 
+@mixin onDarkMode {
+  @media (prefers-color-scheme: dark) {
+    @content;
+  }
+}
+
 @mixin flex($justify: null, $align: null, $flow: null) {
   display: flex;
   flex-flow: $flow;
@@ -42,7 +48,11 @@ $scr-h-without-top-nav: calc(100dvh - 60px - 12px * 2);
   overflow-wrap: break-word;
 }
 
-@mixin inline-separator($sep, $margin-inline: 4px) {
+@mixin inline-separator(
+  $sep,
+  $margin-inline: 4px,
+  $sep-color: var(--text-grey)
+) {
   > *:not(i) {
     display: inline;
     margin-inline-end: $margin-inline;
@@ -50,6 +60,7 @@ $scr-h-without-top-nav: calc(100dvh - 60px - 12px * 2);
     &:not(:last-child)::after {
       content: $sep;
       margin-inline-start: $margin-inline;
+      color: $sep-color;
     }
   }
 }
