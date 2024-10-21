@@ -6,16 +6,20 @@ export function randomIntInRange(min: number, max: number) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-export const localStorageUtils = {
+const _createStorageUtils = (storage: Storage) => ({
   setItem(key: string, value: any) {
-    localStorage.setItem(key, JSON.stringify(value));
+    storage.setItem(key, JSON.stringify(value));
   },
 
   getItem(key: string) {
-    const value = localStorage.getItem(key);
+    const value = storage.getItem(key);
     return value !== null ? JSON.parse(value) : void 0;
   },
-};
+});
+
+export const localStorageUtils = _createStorageUtils(localStorage);
+
+export const sessionStorageUtils = _createStorageUtils(sessionStorage);
 
 export type ResponseWithCancelFn<T> = {
   response: Promise<T | undefined>;
@@ -76,10 +80,35 @@ export function formatDate(dateStr: string): string {
   const month = date.getMonth() + 1;
   const day = date.getDate();
   if (year === now.getFullYear()) {
-    return `今年${month}月${day}日`;
+    return `${month}月${day}日`;
   }
 
   return `${year}年${month}月${day}日`;
+}
+
+export function formatTime(ms: number) {
+  const sec = 1000;
+  if (ms < sec) return '不足1秒';
+
+  const min = 60 * sec;
+  if (ms < min) return `${Math.floor(ms / sec)}秒`;
+
+  const hour = 60 * min;
+  if (ms < hour) return `${Math.floor(ms / min)}分钟`;
+
+  const day = 24 * hour;
+  if (ms < day) return `${Math.floor(ms / hour)}小时`;
+
+  const week = 7 * day;
+  if (ms < week) return `${Math.floor(ms / day)}天`;
+
+  const month = 30 * day;
+  if (ms < month) return `${Math.floor(ms / week)}周`;
+
+  const year = 12 * month;
+  if (ms < year) return `${Math.floor(ms / month)}个月`;
+
+  return `${Math.floor(ms / year)}年`;
 }
 
 export function staticResUrl(path: string) {
