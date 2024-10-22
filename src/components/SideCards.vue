@@ -1,15 +1,22 @@
 <template>
   <Transition appear name="side-card-appear">
-    <TransitionGroup name="card-toggle" tag="aside" class="side-info">
-      <BloggerCard key="side-card-blogger" />
+    <TransitionGroup
+      name="card-toggle"
+      tag="aside"
+      class="side-cards"
+      :style="{
+        '--relative-top': relativeTop,
+      }"
+      @before-leave="setRelativeTop">
+      <BloggerCard key="side-card-blogger" ref="bloggerCard" />
 
       <div
         class="info-card"
-        v-show="$route.name !== 'categories'"
+        v-if="$route.name !== 'categories'"
         key="side-card-categories">
         <h3>
           <i class="title-icon iconfont icon-wenjianjia"></i>
-          <span class="title-cont">分类</span>
+          <span class="title-label">分类</span>
         </h3>
 
         <ul class="categories" v-if="cate">
@@ -39,13 +46,10 @@
         </RouterLink>
       </div>
 
-      <div
-        class="info-card"
-        v-show="$route.name !== 'tags'"
-        key="side-card-tags">
+      <div class="info-card" v-if="$route.name !== 'tags'" key="side-card-tags">
         <h3>
           <i class="title-icon iconfont icon-24gf-tags2"></i>
-          <span class="title-cont">标签</span>
+          <span class="title-label">标签</span>
         </h3>
 
         <ul class="tags" v-if="tag">
@@ -72,17 +76,13 @@
         </RouterLink>
       </div>
 
-      <div class="info-card" key="side-card-link-exchange">
+      <div
+        class="info-card"
+        v-if="$route.name !== 'link-exchange'"
+        key="side-card-link-exchange">
         <h3>
           <i class="title-icon iconfont icon-youlian-f"></i>
-          <span class="title-cont">友链</span>
-        </h3>
-      </div>
-
-      <div class="info-card" key="side-card-title">
-        <h3>
-          <i class="title-icon iconfont icon-caidan"></i>
-          <span class="title-cont">标题</span>
+          <span class="title-label">友链</span>
         </h3>
       </div>
     </TransitionGroup>
@@ -91,6 +91,8 @@
 
 <script setup lang="ts">
 import BloggerCard from './BloggerCard.vue';
+
+import { ref, useTemplateRef } from 'vue';
 
 import { fetchStat } from '@/api';
 
@@ -110,10 +112,23 @@ const getShownData = (raw: Record<string, number>, shownCount: number) => {
 };
 const { shownData: cateShown, hasMore: cateHasMore } = getShownData(cate, 5);
 const { shownData: tagShown, hasMore: tagHasMore } = getShownData(tag, 2);
+
+// TransitionGroup淡出优化
+// BUG 淡出的卡片下方的卡片偶尔丢失动画
+const bloggerCard = useTemplateRef('bloggerCard');
+const relativeTop = ref('');
+const setRelativeTop = (targetEl: Element) => {
+  if (!bloggerCard.value) return;
+  const bloggerCardEl = bloggerCard.value.$el as Element;
+
+  const elH = targetEl.getBoundingClientRect().top;
+  const bloggerCardH = bloggerCardEl.getBoundingClientRect().top;
+  relativeTop.value = `${(elH - bloggerCardH).toFixed(4)}px`;
+};
 </script>
 
 <style lang="scss" scoped>
-.side-info {
+.side-cards {
   @include flex(null, null, column);
   flex-shrink: 0;
   row-gap: 12px;
@@ -133,7 +148,7 @@ const { shownData: tagShown, hasMore: tagHasMore } = getShownData(tag, 2);
   background-color: var(--bg-2);
 }
 
-.title-cont {
+.title-label {
   margin-inline-start: 4px;
 }
 
@@ -250,6 +265,6 @@ $child-delay: 0.1s;
 // 从文档流中移除离开的元素以保障move动画
 .card-toggle-leave-active {
   position: absolute;
-  top: 300px;
+  top: var(--relative-top, 328px);
 }
 </style>
