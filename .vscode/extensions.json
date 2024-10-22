@@ -3,6 +3,7 @@
     "Vue.volar",
     "dbaeumer.vscode-eslint",
     "esbenp.prettier-vscode",
-    "mrmlnc.vscode-scss"
+    "mrmlnc.vscode-scss",
+    "Gruntfuggly.todo-tree"
   ]
 }

@@ -1,13 +1,15 @@
 <template>
   <RouterView v-slot="{ Component }">
     <template v-if="Component">
-      <PostCover />
-      <div class="blog-content">
-        <SideCards />
-        <Transition name="fade-slide-y" mode="out-in">
-          <component :is="Component" class="pos-right-fill" />
-        </Transition>
-      </div>
+      <main class="blog-home">
+        <PostCover />
+        <div class="blog-content">
+          <SideCards />
+          <Transition name="fade-slide-y" mode="out-in">
+            <component :is="Component" class="pos-right-fill" />
+          </Transition>
+        </div>
+      </main>
     </template>
   </RouterView>
 </template>
@@ -18,6 +20,11 @@ import SideCards from '@/components/SideCards.vue';
 </script>
 
 <style lang="scss">
+.blog-home {
+  overflow: hidden;
+  min-height: $scr-h-without-top-nav;
+}
+
 .blog-content {
   @include flex;
   column-gap: 12px;

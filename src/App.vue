@@ -1,12 +1,16 @@
 <template>
   <BlogNav :title :itemsMid />
 
-  <main class="blog-main">
-    <Suspense>
-      <RouterView />
-      <template #fallback> 加载中... </template>
-    </Suspense>
-  </main>
+  <Suspense>
+    <RouterView v-slot="{ Component }">
+      <template v-if="Component">
+        <Transition name="fade" mode="out-in" :duration="150">
+          <component :is="Component" />
+        </Transition>
+      </template>
+    </RouterView>
+    <template #fallback> 加载中... </template>
+  </Suspense>
 </template>
 
 <script setup lang="ts">
@@ -24,12 +28,15 @@ const itemsMid = [
     iconClass: 'icon-24gf-tags2',
     to: { name: 'tags' },
   },
+  {
+    label: '友链',
+    iconClass: 'icon-youlian-f',
+    to: { name: 'link-exchange' },
+  },
+  {
+    label: '关于',
+    iconClass: 'icon-guanyu',
+    to: { name: 'aboutView' },
+  },
 ];
 </script>
-
-<style lang="scss">
-.blog-main {
-  overflow: hidden;
-  min-height: $scr-h-without-top-nav;
-}
-</style>
