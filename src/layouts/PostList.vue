@@ -18,15 +18,24 @@
         icon-class="icon-arrow-double-left"
         :disabled="isFirstPage"
         @click="currentPage = 1" />
+
       <PaginationButton
         icon-class="icon-arrow-left-bold"
         :disabled="isFirstPage"
         @click="prev" />
-      {{ currentPage }}
+
+      <input
+        class="input-index"
+        type="number"
+        :placeholder="`${currentPage}`"
+        @change="pageJump"
+        @keydown.enter="pageJump" />
+
       <PaginationButton
         icon-class="icon-arrow-right-bold"
         :disabled="isLastPage"
         @click="next" />
+
       <PaginationButton
         icon-class="icon-arrow-double-right"
         :disabled="isLastPage"
@@ -48,7 +57,14 @@ const { withCriterion, onPageChange } = defineProps<{
 
 import PostListItem from '@/components/PostListItem.vue';
 
-import { ref, computed, watchEffect, toValue, onWatcherCleanup } from 'vue';
+import {
+  ref,
+  computed,
+  toValue,
+  watch,
+  watchEffect,
+  onWatcherCleanup,
+} from 'vue';
 import { useRoute, onBeforeRouteLeave } from 'vue-router';
 import { useOffsetPagination, useSessionStorage } from '@vueuse/core';
 import { fetchStat } from '@/api';
@@ -64,12 +80,12 @@ const criterion = (() => {
 const stat = await fetchStat();
 
 let currentTotal: MaybeRefOrGetter<number>;
-let currentCriterionName: ComputedRef<string>;
-let listTitle: string;
+let currentCriterionName: ComputedRef<string> | undefined = void 0;
+let listTitle: ComputedRef<string> | undefined = void 0;
 let _fetchWrapperFn: (params: {
   index: number;
   total: number;
-  criterionName: string;
+  criterionName?: string;
 }) => ResponseWithCancelFn<Blog.Post.DBItem[]>;
 
 if (withCriterion) {
@@ -77,13 +93,13 @@ if (withCriterion) {
     () => route.params[route.name!.toString().substring(1)] as string,
   );
 
-  listTitle = (() => {
+  listTitle = computed(() => {
     const criterionTitle =
       criterion === 'cate' ? '分类' : criterion === 'tag' ? '标签' : void 0;
-    return `${criterionTitle} - ${currentCriterionName.value}`;
-  })();
+    return `${criterionTitle} - ${currentCriterionName!.value}`;
+  });
 
-  currentTotal = computed(() => stat[criterion!][currentCriterionName.value]);
+  currentTotal = computed(() => stat[criterion!][currentCriterionName!.value]);
 
   _fetchWrapperFn = ({ index, total, criterionName }) =>
     onPageChange(criterionName, index, total);
@@ -93,13 +109,13 @@ if (withCriterion) {
   _fetchWrapperFn = ({ index, total }) => onPageChange(index, total);
 }
 
-const fetchPage = async (index: number, init = false) => {
+const fetchPage = async (index: number) => {
   const { response, cancel } = _fetchWrapperFn({
     index,
     total: toValue(currentTotal),
     criterionName: toValue(currentCriterionName),
   });
-  if (!init) onWatcherCleanup(cancel);
+  onWatcherCleanup(cancel);
   const pageData = await response;
   if (pageData) data.value = pageData;
 };
@@ -119,21 +135,30 @@ const { currentPage, pageCount, isFirstPage, isLastPage, prev, next } =
       indexRecord.value = currentPage;
     },
   });
-watchEffect(async () => {
+const { pause, resume } = watchEffect(async () => {
   await fetchPage(toValue(indexRecord));
+  pause();
 });
+if (currentCriterionName) {
+  watch(currentCriterionName, () => {
+    indexRecord.value = 1;
+    resume();
+  });
+}
 onBeforeRouteLeave(to => {
   if (to.name !== ':postName') {
     sessionStorageUtils.setItem('lastPageIndex', 1);
   }
 });
 
+// 切页按钮封装
 const PaginationButton: FunctionalComponent<
-  { iconClass: string; disabled: boolean; label?: string },
+  { iconClass: string; disabled?: boolean; label?: string },
   { click(): void }
 > = (props, { emit }) => {
   return (
     <button
+      type='button'
       class={[
         'pagination-btn',
         'iconfont',
@@ -141,7 +166,7 @@ const PaginationButton: FunctionalComponent<
         props.disabled ? '--disabled' : '',
       ]}
       onClick={() => emit('click')}>
-      {props.label}
+      {props.label ?? ''}
     </button>
   );
 };
@@ -152,11 +177,26 @@ PaginationButton.props = {
   },
   disabled: {
     type: Boolean,
-    required: true,
   },
   label: String,
 };
 PaginationButton.emits = ['click'];
+
+// 输入页数并跳转
+const pageJump = (e: Event) => {
+  const inputEl = e.target as HTMLInputElement;
+  const destIndex = inputEl.valueAsNumber;
+  if (destIndex > toValue(pageCount)) {
+    // TODO 页数超限提示框
+    inputEl.value = '';
+    return;
+  }
+  currentPage.value = destIndex;
+
+  if (e.type === 'keydown') {
+    inputEl.blur();
+  }
+};
 </script>
 
 <style lang="scss">
@@ -201,6 +241,36 @@ PaginationButton.emits = ['click'];
 
   &:not(.--disabled):hover {
     background-color: var(--bg-4);
+  }
+}
+
+.input-index {
+  width: calc(12px * 2 + 2rem);
+  padding: 12px;
+  border: 2px solid var(--bg-2);
+  border-radius: 12px;
+  outline: 1px solid transparent;
+  background-color: transparent;
+  color: var(--text-regular);
+  text-align: center;
+  transition: outline 0.15s;
+
+  &::placeholder {
+    color: var(--text-regular);
+  }
+
+  &:focus {
+    outline: 1px solid var(--text-white);
+
+    &::placeholder {
+      color: transparent;
+    }
+  }
+
+  &::-webkit-inner-spin-button,
+  &::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
   }
 }
 </style>
