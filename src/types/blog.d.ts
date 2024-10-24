@@ -41,6 +41,14 @@ declare global {
       cate: Record<string, number>;
       tag: Record<string, number>;
     }
+
+    interface FriendLink {
+      name: string;
+      tagline: string;
+      url: string;
+      logo: string;
+      color: string;
+    }
   }
 }
 

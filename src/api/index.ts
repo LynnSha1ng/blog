@@ -309,3 +309,8 @@ export function fetchPostsByCategory(
     () => console.log('cate: 取消请求'),
   );
 }
+
+export async function fetchLinkExchange() {
+  const { response } = _fetchData<Blog.FriendLink[]>('data/links.json');
+  return await response;
+}

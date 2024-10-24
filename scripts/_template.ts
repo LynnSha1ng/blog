@@ -58,5 +58,6 @@ export async function doGenDataWork(options: GenDataWorkOptions) {
     return files.length;
   } catch (err) {
     console.error(err);
+    process.exit(1);
   }
 }
