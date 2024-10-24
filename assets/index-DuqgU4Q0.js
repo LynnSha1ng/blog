@@ -1,0 +1,1 @@
+import{G as e}from"./GroupingPage-CYGqZZVM.js";import{d as o,o as r,l as t}from"./index-DarJQmf9.js";const i=o({__name:"index",setup(a){return(n,c)=>(r(),t(e,{criterion:"category"}))}});export{i as default};
