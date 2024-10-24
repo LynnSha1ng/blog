@@ -1,1 +1,0 @@
-import{G as e}from"./GroupingPage-Fm8hdlLi.js";import{d as o,o as r,i as t}from"./index-B0CJDxn_.js";import"./index-CVuISkqT.js";const m=o({__name:"index",setup(a){return(n,i)=>(r(),t(e,{criterion:"tag"}))}});export{m as default};

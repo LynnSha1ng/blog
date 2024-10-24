@@ -1,0 +1,1 @@
+import{_ as e}from"./PostList.vue_vue_type_style_index_0_lang-CCrgQaW_.js";import{d as a,o,l as n,e as t,D as s}from"./index-D9ldzl09.js";const p=a({__name:"HomeView",setup(c){return(r,_)=>(o(),n(e,{"item-style":"detailed","on-page-change":t(s)},null,8,["on-page-change"]))}});export{p as default};

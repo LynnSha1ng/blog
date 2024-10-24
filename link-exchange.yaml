@@ -1,0 +1,84 @@
+links:
+  - name: 'Tech Blog'
+    tagline: 'Exploring the world of technology'
+    url: 'https://techblog.com'
+    logo: 'https://s2.loli.net/2023/10/28/cxUr2jpP5KkW19J.jpg'
+    color: '#f1f1f1'
+
+  - name: 'Design Hub'
+    tagline: 'Where design meets creativity'
+    url: 'https://designhub.com'
+    logo: 'https://s2.loli.net/2023/10/28/cxUr2jpP5KkW19J.jpg'
+    color: '#f1f1f1'
+
+  - name: "Coder's Paradise"
+    tagline: 'Programming tutorials and tips'
+    url: 'https://codersparadise.com'
+    logo: 'https://s2.loli.net/2023/10/28/cxUr2jpP5KkW19J.jpg'
+    color: '#f1f1f1'
+
+  - name: 'Fitness First'
+    tagline: 'Your daily dose of fitness inspiration'
+    url: 'https://fitnessfirst.com'
+    logo: 'https://s2.loli.net/2023/10/28/cxUr2jpP5KkW19J.jpg'
+    color: '#f1f1f1'
+
+  - name: 'Travel Tales'
+    tagline: 'Adventures around the world'
+    url: 'https://traveltales.com'
+    logo: 'https://s2.loli.net/2023/10/28/cxUr2jpP5KkW19J.jpg'
+    color: '#f1f1f1'
+
+  - name: "Foodie's Delight"
+    tagline: 'Savor the best recipes'
+    url: 'https://foodiesdelight.com'
+    logo: 'https://s2.loli.net/2023/10/28/cxUr2jpP5KkW19J.jpg'
+    color: '#f1f1f1'
+
+  - name: 'Finance Gurus'
+    tagline: 'Master your finances with expert tips'
+    url: 'https://financegurus.com'
+    logo: 'https://s2.loli.net/2023/10/28/cxUr2jpP5KkW19J.jpg'
+    color: '#f1f1f1'
+
+  - name: 'Eco Living'
+    tagline: 'Sustainable living made simple'
+    url: 'https://ecoliving.com'
+    logo: 'https://s2.loli.net/2023/10/28/cxUr2jpP5KkW19J.jpg'
+    color: '#f1f1f1'
+
+  - name: 'Photography World'
+    tagline: 'Capture the moment, one shot at a time'
+    url: 'https://photographyworld.com'
+    logo: 'https://s2.loli.net/2023/10/28/cxUr2jpP5KkW19J.jpg'
+    color: '#f1f1f1'
+
+  - name: 'Startup Success'
+    tagline: 'Turning ideas into businesses'
+    url: 'https://startupsuccess.com'
+    logo: 'https://s2.loli.net/2023/10/28/cxUr2jpP5KkW19J.jpg'
+    color: '#f1f1f1'
+
+  - name: 'Gaming Galaxy'
+    tagline: 'Your universe of gaming'
+    url: 'https://gaminggalaxy.com'
+    logo: 'https://s2.loli.net/2023/10/28/cxUr2jpP5KkW19J.jpg'
+    color: '#f1f1f1'
+
+  - name: 'Art Studio'
+    tagline: 'Unleashing creativity through art'
+    url: 'https://artstudio.com'
+    logo: 'https://s2.loli.net/2023/10/28/cxUr2jpP5KkW19J.jpg'
+    color: '#f1f1f1'
+
+  - name: 'Health Matters'
+    tagline: 'Your guide to a healthier life'
+    url: 'https://healthmatters.com'
+    logo: 'https://s2.loli.net/2023/10/28/cxUr2jpP5KkW19J.jpg'
+    color: '#f1f1f1'
+
+  - name: 'Techie Updates'
+    tagline: 'Stay updated with the latest tech trends'
+    url: 'https://techieupdates.com'
+    logo: 'https://s2.loli.net/2023/10/28/cxUr2jpP5KkW19J.jpg'
+    color: '#f1f1f1'
