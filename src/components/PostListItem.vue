@@ -19,24 +19,37 @@
         <h3 class="post-title">
           {{ title }}
         </h3>
+
         <p class="post-desc">
           {{ description }}
         </p>
+
         <div class="post-meta">
           <span class="publish-time">
             <i class="meta-icon iconfont icon-calendar"></i>
             <span class="time-txt">发表于</span>
             <time :datetime="birthTime">{{ formatDate(birthTime) }}</time>
           </span>
+
           <span class="last-modify-time">
             <i class="meta-icon iconfont icon-edit"></i>
             <span class="time-txt">最后修改于</span>
             <time :datetime="mTime">{{ formatDate(mTime) }}</time>
           </span>
+
           <span class="category" v-show="$route.name !== ':categoryName'">
-            <i class="meta-icon iconfont icon-work"></i>
-            <span class="category-label">{{ category }}</span>
+            <RouterLink
+              :to="{
+                name: ':categoryName',
+                params: {
+                  categoryName: category,
+                },
+              }">
+              <i class="meta-icon iconfont icon-work"></i>
+              <span class="category-label">{{ category }}</span>
+            </RouterLink>
           </span>
+
           <ul class="tags" v-show="$route.name !== ':tagName'">
             <i class="meta-icon iconfont icon-discount"></i>
             <RouterLink
@@ -58,7 +71,6 @@
 
 <script setup lang="ts">
 /* global Blog */
-
 const { data } = defineProps<{
   data: Blog.Post.Meta;
   itemStyle: 'detailed' | 'brief';
@@ -183,11 +195,6 @@ import { formatDate } from '@/utils/tool';
   cursor: auto;
 }
 
-.post-desc {
-  margin: 0;
-  cursor: auto;
-}
-
 .post-meta {
   color: var(--text-grey);
   font-size: small;
@@ -197,13 +204,8 @@ import { formatDate } from '@/utils/tool';
   margin-inline-end: 4px;
 }
 
-.publish-time,
-.last-modify-time {
-  cursor: auto;
-}
-
 .category-label {
-  transition: color 0.35s;
+  @include transition(color);
 
   &:hover {
     color: var(--primary);
@@ -211,8 +213,7 @@ import { formatDate } from '@/utils/tool';
 }
 
 .tag {
-  transition-property: background-color, color;
-  transition-duration: 0.35s;
+  @include transition((background-color, color));
 
   &:hover {
     color: var(--primary);

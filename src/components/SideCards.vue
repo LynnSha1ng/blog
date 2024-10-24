@@ -114,7 +114,7 @@ const { shownData: cateShown, hasMore: cateHasMore } = getShownData(cate, 5);
 const { shownData: tagShown, hasMore: tagHasMore } = getShownData(tag, 2);
 
 // TransitionGroup淡出优化
-// BUG 淡出的卡片下方的卡片偶尔丢失动画
+// BUG 淡出的卡片下方的卡片偶尔丢失move动画
 const bloggerCard = useTemplateRef('bloggerCard');
 const relativeTop = ref('');
 const setRelativeTop = (targetEl: Element) => {
@@ -166,7 +166,7 @@ const setRelativeTop = (targetEl: Element) => {
   padding: 8px;
   border-radius: 8px;
   font-weight: bold;
-  transition: background-color 0.25s;
+  @include transition(background-color, 0.25s);
 
   &:hover {
     background-color: var(--bg-3);
@@ -185,7 +185,7 @@ const setRelativeTop = (targetEl: Element) => {
 .tag-item {
   padding: 8px;
   border-radius: 8px;
-  transition: background-color 0.25s;
+  @include transition(background-color, 0.25s);
 
   &:hover {
     background-color: var(--bg-3);
@@ -252,8 +252,7 @@ $child-delay: 0.1s;
 .card-toggle-move,
 .card-toggle-enter-active,
 .card-toggle-leave-active {
-  transition-property: opacity, transform;
-  transition-duration: 0.35s;
+  @include transition((opacity, transform));
 }
 
 .card-toggle-enter-from,

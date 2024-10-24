@@ -1,9 +1,12 @@
 <template>
-  <div class="grouping-page" v-if="$route.name === nameMap[criterion][0]">
+  <div
+    class="content-main-page grouping-page"
+    v-if="$route.name === nameMap[criterion][0]">
     <h1 class="page-title">
       所有{{ nameMap[criterion][2] }}
       <hr class="border-grey" />
     </h1>
+
     <ul class="items">
       <RouterLink
         v-for="(total, label) in stat[nameMap[criterion][3] as keyof Blog.Stat]"
@@ -21,6 +24,7 @@
       </RouterLink>
     </ul>
   </div>
+
   <RouterView v-else-if="$route.name === nameMap[criterion][1]" />
 </template>
 
@@ -47,22 +51,11 @@ const stat = await fetchStat();
 </script>
 
 <style lang="scss" scoped>
-.grouping-page {
-  min-height: $scr-h-without-top-nav;
-  padding: 24px;
-  background-color: var(--bg-2);
-}
-
-.page-title {
-  text-align: center;
-  pointer-events: none;
-}
-
 .items {
   display: grid;
   grid-template-columns: repeat(2, minmax(5em, 1fr));
 
-  @include screenBelow($xs) {
+  @include screenBelow($xs2) {
     grid-template-columns: 1fr;
   }
 }
@@ -72,8 +65,7 @@ const stat = await fetchStat();
   padding: 12px;
   border-radius: 12px;
   font-size: large;
-  transition-property: background-color, color;
-  transition-duration: 0.25s;
+  @include transition((background-color, color), 0.25s);
 
   &:hover {
     background-color: var(--bg-3);

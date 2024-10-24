@@ -1,4 +1,5 @@
-$xs: 360px;
+$xs2: 360px;
+$xs: 540px;
 $sm: 640px;
 $md: 768px;
 $lg: 900px;
@@ -7,6 +8,16 @@ $xl2: 1280px;
 
 $scr-w-max: 520px * 2 + 300px + 12px * 4; // 1388px
 $scr-h-without-top-nav: calc(100dvh - 60px - 12px * 2);
+
+@mixin transition($property, $duration: 0.35s, $delay: null) {
+  @if length($property) == 1 {
+    transition: $property $duration $delay;
+  } @else {
+    transition-property: $property;
+    transition-duration: $duration;
+    transition-delay: $delay;
+  }
+}
 
 @mixin screenBelow($breakpoint) {
   @media screen and (max-width: $breakpoint) {

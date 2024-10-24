@@ -6,6 +6,7 @@
       {{ listTitle }}
       <hr class="border-grey" />
     </h1>
+
     <ul :class="['post-list', `--${itemStyle}`]">
       <PostListItem
         :data="item"
@@ -13,6 +14,7 @@
         v-for="{ metaVer, contVer, cont, ...item } in data"
         :key="`post-${item.name}`" />
     </ul>
+
     <div class="pagination">
       <PaginationButton
         icon-class="icon-arrow-double-left"
@@ -58,7 +60,7 @@ const { withCriterion, onPageChange } = defineProps<{
 import PostListItem from '@/components/PostListItem.vue';
 
 import {
-  ref,
+  shallowRef,
   computed,
   toValue,
   watch,
@@ -120,7 +122,7 @@ const fetchPage = async (index: number) => {
   if (pageData) data.value = pageData;
 };
 
-const data = ref<Blog.Post.DBItem[]>();
+const data = shallowRef<Blog.Post.DBItem[]>([]);
 const indexRecord = useSessionStorage('lastPageIndex', 1, {
   mergeDefaults: true,
 });
@@ -152,24 +154,30 @@ onBeforeRouteLeave(to => {
 });
 
 // 切页按钮封装
-const PaginationButton: FunctionalComponent<
-  { iconClass: string; disabled?: boolean; label?: string },
-  { click(): void }
-> = (props, { emit }) => {
-  return (
-    <button
-      type='button'
-      class={[
-        'pagination-btn',
-        'iconfont',
-        props.iconClass,
-        props.disabled ? '--disabled' : '',
-      ]}
-      onClick={() => emit('click')}>
-      {props.label ?? ''}
-    </button>
-  );
+type PaginationButtonProps = {
+  iconClass: string;
+  disabled?: boolean;
+  label?: string;
 };
+type PaginationButtonEmits = {
+  click(): void;
+};
+const PaginationButton: FunctionalComponent<
+  PaginationButtonProps,
+  PaginationButtonEmits
+> = (props, { emit }) => (
+  <button
+    type='button'
+    class={[
+      'pagination-btn',
+      'iconfont',
+      props.iconClass,
+      props.disabled ? '--disabled' : '',
+    ]}
+    onClick={() => emit('click')}>
+    {props.label ?? ''}
+  </button>
+);
 PaginationButton.props = {
   iconClass: {
     type: String,
@@ -219,7 +227,7 @@ const pageJump = (e: Event) => {
 }
 
 .pagination {
-  @include flex(center, center, wrap);
+  @include flex(center, center);
   gap: 8px;
   margin: 12px 0;
 }
@@ -229,8 +237,7 @@ const pageJump = (e: Event) => {
   border-radius: 12px;
   background-color: var(--bg-3);
   color: var(--text-regular);
-  transition-property: background-color, color;
-  transition-duration: 0.35s;
+  @include transition((background-color, color));
 
   &.--disabled {
     background-color: var(--bg-1);
@@ -253,7 +260,7 @@ const pageJump = (e: Event) => {
   background-color: transparent;
   color: var(--text-regular);
   text-align: center;
-  transition: outline 0.15s;
+  @include transition(outline, 0.15s);
 
   &::placeholder {
     color: var(--text-regular);

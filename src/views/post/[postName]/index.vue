@@ -104,8 +104,7 @@ const cancelAndBack = async (close: () => void) => {
   border-radius: 8px;
   color: var(--text-white);
   line-height: 1.5;
-  transition-property: background-color, color;
-  transition-duration: 0.35s;
+  @include transition((background-color, color));
 
   &:hover {
     background-color: var(--bg-3);

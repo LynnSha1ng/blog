@@ -69,9 +69,10 @@ body {
     'Helvetica Neue',
     sans-serif;
   color: var(--text-regular);
-  transition:
-    background-color 0.5s,
-    color 0.5s;
+  @include transition((background-color, color), 0.5s);
+  // transition:
+  //   background-color 0.5s,
+  //   color 0.5s;
   -webkit-tap-highlight-color: transparent;
   -webkit-font-smoothing: antialiased;
 }
