@@ -3,41 +3,82 @@
     :class="{
       'top-nav': true,
       'shadow-bottom': showNav,
+    }"
+    :style="{
+      '--nav-trans-y': cssNavTransY,
     }">
     <h3>
-      <RouterLink :to="{ name: 'home' }">{{ title }}</RouterLink>
+      <RouterLink :to="{ name: 'homeView' }">{{ title }}</RouterLink>
     </h3>
 
     <ul class="nav-items --pc-only">
       <RouterLink
-        v-for="item in items.labeled"
+        v-for="item in itemsMid"
         :key="`nav-item-labeled-${item}`"
         custom
         :to="item.to"
         v-slot="{ navigate }">
         <li class="nav-item underline-grow" @click="navigate" role="link">
-          <i :class="['item-icon', 'iconfont', item.iconClass]"></i>
-          <span class="item-label"> {{ item.label }}</span>
+          <i :class="['nav-item-icon', 'iconfont', item.iconClass]"></i>
+          <span class="nav-item-label"> {{ item.label }}</span>
         </li>
       </RouterLink>
     </ul>
 
     <ul class="nav-items">
       <RouterLink
-        v-for="item in items.unlabeled"
-        :key="`nav-item-unlabeled-${item}`"
         custom
-        :to="item.to"
+        :to="{
+          name: ':postName',
+          params: {
+            postName: randomPostName,
+          },
+        }"
         v-slot="{ navigate }">
         <li
-          class="nav-item underline-grow item-icon iconfont"
-          :class="item.iconClass"
-          :title="item.label"
-          @click="navigate"
+          class="nav-item underline-grow nav-item-icon iconfont icon-touzi"
+          title="随便逛逛"
+          @click="
+            e => {
+              navigate(e);
+              updateRandomPostName();
+            }
+          "
           role="link"></li>
       </RouterLink>
-      <li
-        class="nav-item underline-grow item-icon iconfont icon-caidan --mobile-only"></li>
+
+      <WithDrawer v-model="menuOpen" width="300px" enter-from="right">
+        <li
+          class="nav-item underline-grow nav-item-icon iconfont icon-caidan --mobile-only"
+          @click="menuOpen = true"></li>
+        <template #content>
+          <Suspense>
+            <BloggerCard brief />
+          </Suspense>
+          <hr class="border-grey" />
+          <ul class="menu-items">
+            <RouterLink
+              v-for="item in itemsMid"
+              :key="`nav-menu-item-${item}`"
+              custom
+              :to="item.to"
+              v-slot="{ navigate }">
+              <li
+                class="menu-item"
+                @click="
+                  e => {
+                    navigate(e);
+                    menuOpen = false;
+                  }
+                "
+                role="link">
+                <i :class="['menu-item-icon', 'iconfont', item.iconClass]"></i>
+                <span class="menu-item-label"> {{ item.label }}</span>
+              </li>
+            </RouterLink>
+          </ul>
+        </template>
+      </WithDrawer>
     </ul>
   </nav>
   <div class="top-nav-placeholder" v-show="!atPostPage"></div>
@@ -51,29 +92,28 @@ interface NavItem {
   label: string;
   to: RouteLocationRaw;
 }
-export interface NavConfig {
-  title: string;
-  items: {
-    labeled: NavItem[];
-    unlabeled: NavItem[];
-  };
-}
-defineProps<
-  NavConfig & {
-    withPlaceholder?: boolean;
-  }
->();
 
-import { ref, computed } from 'vue';
+defineProps<{
+  title: string;
+  itemsMid: NavItem[];
+  withPlaceholder?: boolean;
+}>();
+
+import BloggerCard from './BloggerCard.vue';
+import WithDrawer from './WithDrawer.vue';
+
+import { ref, computed, onBeforeMount } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useEventListener, useDebounceFn, useThrottleFn } from '@vueuse/core';
 import { usePostStore } from '@/stores';
+import { fetchRandomPostName } from '@/api';
 
+// nav主逻辑
 const postBannerStore = usePostStore();
 const { atPostPage } = storeToRefs(postBannerStore);
 
-const lastScrollY = ref(0);
 const showNav = ref(true);
+const lastScrollY = ref(0);
 const cssNavTransY = computed(() => (showNav.value ? '0' : '-100%'));
 
 useEventListener(
@@ -99,6 +139,21 @@ useEventListener(
     }
   }, 1000),
 );
+
+// 随便逛逛
+const randomPostName = ref(' ');
+const updateRandomPostName = async () => {
+  const name = await fetchRandomPostName();
+  if (name) {
+    randomPostName.value = name;
+  }
+};
+onBeforeMount(async () => {
+  await updateRandomPostName();
+});
+
+// 移动端汉堡菜单
+const menuOpen = ref(false);
 </script>
 
 <style lang="scss" scoped>
@@ -115,16 +170,14 @@ useEventListener(
   max-width: $scr-w-max;
   padding: 0 12px;
   background-color: color-mix(in oklch, var(--bg-2), transparent 25%);
-  transform: translateY(v-bind(cssNavTransY));
-  transition-property: background-color, transform, box-shadow;
-  transition-duration: 0.35s;
-
-  @include screenBelow($md) {
-    padding-right: 0;
-  }
+  transform: translateY(var(--nav-trans-y));
+  @include transition((background-color, transform, box-shadow));
 }
 
 .nav-items {
+  @include flex;
+  gap: 8px;
+
   &.--pc-only {
     position: absolute;
     left: 50%;
@@ -139,10 +192,7 @@ useEventListener(
 .nav-item {
   --color-grow-line: var(--primary);
 
-  display: inline;
   padding: 8px;
-  margin-inline: 4px;
-  cursor: pointer;
 
   &:hover {
     color: var(--primary);
@@ -155,12 +205,39 @@ useEventListener(
   }
 }
 
-.item-icon {
-  font-size: 1.15rem;
+.nav-item-icon {
+  font-size: 1.25rem;
 }
 
-.item-label {
-  margin-inline-start: 4px;
-  font-size: 0.95rem;
+.nav-item-label {
+  margin-inline-start: 8px;
+}
+
+.menu-items {
+  @include flex(null, null, column);
+  row-gap: 8px;
+  margin-top: 20px;
+}
+
+.menu-item {
+  @include flex(null, center);
+  padding: 12px;
+  border-radius: 12px;
+  background-color: var(--bg-2);
+  vertical-align: middle;
+  @include transition((background-color, color));
+
+  &:hover {
+    background-color: var(--bg-3);
+    color: var(--primary);
+  }
+}
+
+.menu-item-icon {
+  font-size: 1.5rem;
+}
+
+.menu-item-label {
+  margin-inline-start: 1rem;
 }
 </style>
