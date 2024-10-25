@@ -57,7 +57,7 @@ $info-abs-w-max: calc(100% - 2 * $item-padding);
 
 $bg-hover-w: calc(100% + $w-left-all);
 
-@mixin setTransition($property...) {
+@mixin set-transition($property...) {
   @include transition($property, $trans-duration, $trans-delay);
 }
 
@@ -130,7 +130,7 @@ $bg-hover-w: calc(100% + $w-left-all);
   contain: content;
 
   @include screenBelow($lg) {
-    @include setTransition(background-color);
+    @include set-transition(background-color);
   }
 }
 
@@ -142,7 +142,7 @@ $bg-hover-w: calc(100% + $w-left-all);
   height: $bg-size;
   border-radius: 50%;
   background-color: var(--bg-color, var(--bg-3));
-  @include setTransition(left, width, height, border-radius);
+  @include set-transition(left, width, height, border-radius);
 
   @include screenBelow($lg) {
     display: none;
@@ -154,7 +154,7 @@ $bg-hover-w: calc(100% + $w-left-all);
   height: $logo-size;
   margin-left: $logo-ml;
   border-radius: 50%;
-  @include setTransition(transform, filter);
+  @include set-transition(transform, filter);
 
   @include screenBelow($lg) {
     position: absolute;
@@ -173,7 +173,7 @@ $bg-hover-w: calc(100% + $w-left-all);
   position: absolute;
   right: $item-padding;
   width: $info-abs-w;
-  @include setTransition(width);
+  @include set-transition(width);
   mix-blend-mode: difference;
 
   @include screenBelow($lg) {

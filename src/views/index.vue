@@ -1,17 +1,17 @@
 <template>
-  <RouterView v-slot="{ Component }">
-    <template v-if="Component">
-      <main class="blog-home">
-        <PostCover />
-        <div class="blog-content">
-          <SideCards />
+  <main class="blog-home">
+    <PostCover />
+    <div class="blog-content">
+      <SideCards />
+      <RouterView v-slot="{ Component }">
+        <template v-if="Component">
           <Transition name="fade-slide-y" mode="out-in">
             <component :is="Component" class="pos-right-fill" />
           </Transition>
-        </div>
-      </main>
-    </template>
-  </RouterView>
+        </template>
+      </RouterView>
+    </div>
+  </main>
 </template>
 
 <script setup lang="ts">

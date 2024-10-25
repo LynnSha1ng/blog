@@ -1,5 +1,5 @@
 <template>
-  <Transition appear name="side-card-appear">
+  <Transition name="side-card-appear">
     <TransitionGroup
       name="card-toggle"
       tag="aside"
@@ -7,7 +7,8 @@
       :style="{
         '--relative-top': relativeTop,
       }"
-      @before-leave="setRelativeTop">
+      @before-leave="setRelativeTop"
+      v-if="mounted">
       <BloggerCard key="side-card-blogger" ref="bloggerCard" />
 
       <div
@@ -19,7 +20,7 @@
           <span class="title-label">分类</span>
         </h3>
 
-        <ul class="categories" v-if="cate">
+        <ul class="categories">
           <RouterLink
             v-for="[label, total] of cateShown"
             :key="`side-card-cate-${label}`"
@@ -41,7 +42,7 @@
         <RouterLink
           :to="{ name: 'categories' }"
           class="has-more"
-          v-show="cateHasMore">
+          v-if="cateHasMore">
           查看更多
         </RouterLink>
       </div>
@@ -52,7 +53,7 @@
           <span class="title-label">标签</span>
         </h3>
 
-        <ul class="tags" v-if="tag">
+        <ul class="tags">
           <RouterLink
             v-for="[label, total] of tagShown"
             :key="`side-card-tag-${label}`"
@@ -71,7 +72,7 @@
           </RouterLink>
         </ul>
 
-        <RouterLink :to="{ name: 'tags' }" class="has-more" v-show="tagHasMore">
+        <RouterLink :to="{ name: 'tags' }" class="has-more" v-if="tagHasMore">
           查看更多
         </RouterLink>
       </div>
@@ -95,11 +96,15 @@ import BloggerCard from './BloggerCard.vue';
 import { ref, useTemplateRef } from 'vue';
 
 import { fetchStat } from '@/api';
+import { useMountedForTransition } from '@/utils/composable';
 
+const { mounted } = useMountedForTransition();
+
+// Blogger、分类、标签
 const { cate, tag } = await fetchStat();
 const getShownData = (raw: Record<string, number>, shownCount: number) => {
-  let shownData: [string, number][] | undefined = void 0;
-  let hasMore: boolean = false;
+  let shownData: [string, number][] = [];
+  let hasMore = false;
   if (raw) {
     const rawEntries = Object.entries(raw);
     shownData = rawEntries.slice(0, shownCount);
@@ -213,28 +218,18 @@ const setRelativeTop = (targetEl: Element) => {
 <!-- transition -->
 <style lang="scss" scoped>
 // side-card-appear
-$card-count: 5;
-$child-duration: 0.5s;
-$child-delay: 0.1s;
+@mixin set-staggered-transition($type) {
+  @include staggered-transition-time-manage($type, 5, 0.5s, 0.1s);
+}
 
 .side-card-appear-enter-active,
 .side-card-appear-leave-active {
   transition-property: transform;
-  @include staggered-transition-time-manage(
-    'root',
-    $card-count,
-    $child-duration,
-    $child-delay
-  );
+  @include set-staggered-transition('root');
 
   .info-card {
     transition-property: opacity, transform;
-    @include staggered-transition-time-manage(
-      'child',
-      $card-count,
-      $child-duration,
-      $child-delay
-    );
+    @include set-staggered-transition('child');
   }
 }
 

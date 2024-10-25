@@ -1,7 +1,8 @@
 <template>
   <div
     class="content-main-page grouping-page"
-    v-if="$route.name === nameMap[criterion][0]">
+    v-if="$route.name === nameMap[criterion][0]"
+    v-show="mounted">
     <h1 class="page-title">
       所有{{ nameMap[criterion][2] }}
       <hr class="border-grey" />
@@ -34,6 +35,9 @@ defineProps<{
 }>();
 
 import { fetchStat } from '@/api';
+import { useMountedForTransition } from '@/utils/composable';
+
+const { mounted } = useMountedForTransition();
 
 const nameMap = {
   category: ['categories', ':categoryName', '分类', 'cate'],

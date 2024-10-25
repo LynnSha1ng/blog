@@ -1,7 +1,8 @@
 <template>
   <div
     class="post-list-wrapper"
-    :key="`post-list-${currentCriterionName ?? 'all'}-${currentPage}`">
+    :key="`post-list-${currentCriterionName ?? 'all'}-${currentPage}`"
+    v-show="mounted">
     <h1 v-show="listTitle">
       {{ listTitle }}
       <hr class="border-grey" />
@@ -71,6 +72,9 @@ import { useRoute, onBeforeRouteLeave } from 'vue-router';
 import { useOffsetPagination, useSessionStorage } from '@vueuse/core';
 import { fetchStat } from '@/api';
 import { sessionStorageUtils } from '@/utils/tool';
+import { useMountedForTransition } from '@/utils/composable';
+
+const { mounted } = useMountedForTransition();
 
 const route = useRoute();
 const criterion = (() => {
