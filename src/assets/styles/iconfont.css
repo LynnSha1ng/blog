@@ -15,6 +15,10 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-zizhutuiguang::before {
+  content: '\e602';
+}
+
 .icon-arrow-double-left::before {
   content: '\e665';
 }
