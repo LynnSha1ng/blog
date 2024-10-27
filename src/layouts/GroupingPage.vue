@@ -1,5 +1,5 @@
 <template>
-  <div
+  <section
     class="content-main-page grouping-page"
     v-if="$route.name === nameMap[criterion][0]"
     v-show="mounted">
@@ -24,7 +24,7 @@
         </li>
       </RouterLink>
     </ul>
-  </div>
+  </section>
 
   <RouterView v-else-if="$route.name === nameMap[criterion][1]" />
 </template>

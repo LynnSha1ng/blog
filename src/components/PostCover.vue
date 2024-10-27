@@ -1,5 +1,5 @@
 <template>
-  <div
+  <section
     :class="{
       'post-banner': true,
       '--shown': atPostPage,
@@ -41,7 +41,7 @@
         </div>
       </div>
     </header>
-  </div>
+  </section>
 </template>
 
 <script setup lang="ts">

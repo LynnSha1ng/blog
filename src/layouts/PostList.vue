@@ -1,5 +1,5 @@
 <template>
-  <div
+  <section
     class="post-list-wrapper"
     :key="`post-list-${currentCriterionName ?? 'all'}-${currentPage}`"
     v-show="mounted">
@@ -44,7 +44,7 @@
         :disabled="isLastPage"
         @click="currentPage = pageCount" />
     </div>
-  </div>
+  </section>
 </template>
 
 <script setup lang="tsx">
@@ -212,6 +212,10 @@ const pageJump = (e: Event) => {
 </script>
 
 <style lang="scss">
+.post-list-wrapper {
+  overflow: hidden;
+}
+
 .post-list {
   display: grid;
   grid-template-columns: repeat(2, 1fr);

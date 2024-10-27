@@ -1,5 +1,5 @@
 <template>
-  <div class="blogger-card">
+  <section class="blogger-card">
     <img class="avatar" src="/images/avatar.jpg" alt="头像" />
     <h3 v-show="!brief">临郢夏望</h3>
     <span class="bio" v-show="!brief">谦逊对待未知</span>
@@ -18,7 +18,7 @@
       <li class="contact-icon iconfont icon-github"></li>
       <li class="contact-icon iconfont icon-tuite"></li>
     </ul>
-  </div>
+  </section>
 </template>
 
 <script setup lang="ts">

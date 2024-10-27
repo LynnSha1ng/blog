@@ -21,14 +21,13 @@ import SideCards from '@/components/SideCards.vue';
 
 <style lang="scss">
 .blog-home {
-  overflow: hidden;
   min-height: $scr-h-without-top-nav;
 }
 
 .blog-content {
   @include flex;
   column-gap: 12px;
-  margin-top: 12px;
+  margin: 12px 0;
   padding: 0 12px;
   border-radius: 12px;
 }

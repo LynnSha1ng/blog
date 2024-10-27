@@ -1,92 +1,99 @@
 <template>
   <Transition name="side-card-appear">
-    <TransitionGroup
-      name="card-toggle"
-      tag="aside"
-      class="side-cards"
-      :style="{
-        '--relative-top': relativeTop,
-      }"
-      @before-leave="setRelativeTop"
-      v-if="mounted">
+    <aside class="side-cards" v-if="mounted">
       <BloggerCard key="side-card-blogger" ref="bloggerCard" />
 
-      <div
-        class="info-card"
-        v-if="$route.name !== 'categories'"
-        key="side-card-categories">
-        <h3>
-          <i class="title-icon iconfont icon-wenjianjia"></i>
-          <span class="title-label">分类</span>
-        </h3>
+      <TransitionGroup
+        name="card-toggle"
+        tag="div"
+        class="sticky-cards"
+        :style="{
+          '--relative-top': relativeTop,
+        }"
+        @before-leave="setRelativeTop"
+        v-if="mounted">
+        <section class="info-card" key="side-card-announcement">
+          <h3>
+            <i
+              class="title-icon shake-loudspeaker iconfont icon-zizhutuiguang"></i>
+            <span class="title-label">公告</span>
+          </h3>
+          <div class="announcement-content">
+            <p>欢迎来到我的个人博客！</p>
+            <p>本博客还在建设中，正在积极优化浏览体验~</p>
+          </div>
+        </section>
 
-        <ul class="categories">
+        <section
+          class="info-card"
+          v-if="$route.name !== 'categories'"
+          key="side-card-categories">
+          <h3>
+            <i class="title-icon iconfont icon-wenjianjia"></i>
+            <span class="title-label">分类</span>
+          </h3>
+
+          <ul class="categories">
+            <RouterLink
+              v-for="[label, total] of cateShown"
+              :key="`side-card-cate-${label}`"
+              custom
+              :to="{
+                name: ':categoryName',
+                params: {
+                  categoryName: label,
+                },
+              }"
+              v-slot="{ navigate }">
+              <li class="category-item" @click="navigate" role="link">
+                <span class="category-label">{{ label }}</span>
+                <span class="category-total">（{{ total }}）</span>
+              </li>
+            </RouterLink>
+          </ul>
+
           <RouterLink
-            v-for="[label, total] of cateShown"
-            :key="`side-card-cate-${label}`"
-            custom
-            :to="{
-              name: ':categoryName',
-              params: {
-                categoryName: label,
-              },
-            }"
-            v-slot="{ navigate }">
-            <li class="category-item" @click="navigate" role="link">
-              <span class="category-label">{{ label }}</span>
-              <span class="category-total">（{{ total }}）</span>
-            </li>
+            :to="{ name: 'categories' }"
+            class="has-more"
+            v-if="cateHasMore">
+            查看更多
           </RouterLink>
-        </ul>
+        </section>
 
-        <RouterLink
-          :to="{ name: 'categories' }"
-          class="has-more"
-          v-if="cateHasMore">
-          查看更多
-        </RouterLink>
-      </div>
+        <section
+          class="info-card"
+          v-if="$route.name !== 'tags'"
+          key="side-card-tags">
+          <h3>
+            <i class="title-icon iconfont icon-24gf-tags2"></i>
+            <span class="title-label">标签</span>
+          </h3>
 
-      <div class="info-card" v-if="$route.name !== 'tags'" key="side-card-tags">
-        <h3>
-          <i class="title-icon iconfont icon-24gf-tags2"></i>
-          <span class="title-label">标签</span>
-        </h3>
+          <ul class="tags">
+            <RouterLink
+              v-for="[label, total] of tagShown"
+              :key="`side-card-tag-${label}`"
+              custom
+              :to="{
+                name: ':tagName',
+                params: {
+                  tagName: label,
+                },
+              }"
+              v-slot="{ navigate }">
+              <li class="tag-item" @click="navigate" role="link">
+                <span class="tag-label">{{ label }}</span>
+                <sup class="tag-total">{{ total }}</sup>
+              </li>
+            </RouterLink>
+          </ul>
 
-        <ul class="tags">
-          <RouterLink
-            v-for="[label, total] of tagShown"
-            :key="`side-card-tag-${label}`"
-            custom
-            :to="{
-              name: ':tagName',
-              params: {
-                tagName: label,
-              },
-            }"
-            v-slot="{ navigate }">
-            <li class="tag-item" @click="navigate" role="link">
-              <span class="tag-label">{{ label }}</span>
-              <sup class="tag-total">{{ total }}</sup>
-            </li>
+          <RouterLink :to="{ name: 'tags' }" class="has-more" v-if="tagHasMore">
+            查看更多
           </RouterLink>
-        </ul>
-
-        <RouterLink :to="{ name: 'tags' }" class="has-more" v-if="tagHasMore">
-          查看更多
-        </RouterLink>
-      </div>
-
-      <div
-        class="info-card"
-        v-if="$route.name !== 'link-exchange'"
-        key="side-card-link-exchange">
-        <h3>
-          <i class="title-icon iconfont icon-youlian-f"></i>
-          <span class="title-label">友链</span>
-        </h3>
-      </div>
-    </TransitionGroup>
+        </section>
+      </TransitionGroup>
+    </aside>
   </Transition>
 </template>
 
@@ -100,21 +107,35 @@ import { useMountedForTransition } from '@/utils/composable';
 
 const { mounted } = useMountedForTransition();
 
-// Blogger、分类、标签
+// 数据
 const { cate, tag } = await fetchStat();
-const getShownData = (raw: Record<string, number>, shownCount: number) => {
-  let shownData: [string, number][] = [];
+
+function getShownData(
+  raw: Record<string, number>,
+  shownCount: number,
+): { shownData: [string, number][]; hasMore: boolean };
+function getShownData<T>(
+  raw: T[] | undefined,
+  shownCount: number,
+): { shownData: T[]; hasMore: boolean };
+function getShownData<T>(
+  raw: Record<string, number> | T[] | undefined,
+  shownCount: number,
+) {
+  let shownData: [string, number][] | T[] = [];
   let hasMore = false;
+
   if (raw) {
-    const rawEntries = Object.entries(raw);
+    const rawEntries = Array.isArray(raw) ? raw : Object.entries(raw);
     shownData = rawEntries.slice(0, shownCount);
     hasMore = rawEntries.length > shownCount;
   }
+
   return {
     shownData,
     hasMore,
   };
-};
+}
 const { shownData: cateShown, hasMore: cateHasMore } = getShownData(cate, 5);
 const { shownData: tagShown, hasMore: tagHasMore } = getShownData(tag, 2);
 
@@ -134,14 +155,19 @@ const setRelativeTop = (targetEl: Element) => {
 
 <style lang="scss" scoped>
 .side-cards {
-  @include flex(null, null, column);
   flex-shrink: 0;
-  row-gap: 12px;
-  position: relative;
   width: 300px;
   @include screenBelow($lg) {
     display: none;
   }
+}
+
+.sticky-cards {
+  @include flex(null, null, column);
+  row-gap: 12px;
+  position: sticky;
+  top: 12px;
+  margin-top: 12px;
 }
 
 .info-card {
@@ -153,12 +179,40 @@ const setRelativeTop = (targetEl: Element) => {
   background-color: var(--bg-2);
 }
 
-.title-label {
-  margin-inline-start: 4px;
-}
-
 .title-icon {
   font-size: 1.08em;
+}
+
+.shake-loudspeaker {
+  display: inline-block;
+  color: red;
+  animation: shake-quickly 1s infinite;
+}
+
+@keyframes shake-quickly {
+  0%,
+  25%,
+  100% {
+    transform: rotate(0deg);
+  }
+  5%,
+  15% {
+    transform: rotate(15deg);
+  }
+  10%,
+  20% {
+    transform: rotate(-15deg);
+  }
+}
+
+.title-label {
+  margin-inline-start: 8px;
+}
+
+.announcement-content {
+  font-size: small;
+  font-weight: bold;
+  line-height: 2;
 }
 
 .categories {
