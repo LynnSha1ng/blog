@@ -4,5 +4,4 @@ import { genLinkData } from './link.js';
 
 await genPostData();
 await genStatData();
-
-genLinkData();
+await genLinkData();

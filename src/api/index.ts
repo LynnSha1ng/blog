@@ -119,29 +119,24 @@ function _fetchData<T>(
   );
 }
 
-async function _checkAndInitDB(
-  total: number,
-  pageCount: number,
-): Promise<void> {
+async function _checkAndInitDB(total: number): Promise<void> {
   const latestCount = await db.post
     .where('metaVer')
     .equals(currentResVer)
     .count();
   if (latestCount < total) {
-    for (let i = 1; i <= pageCount; i++) {
-      const { response: listRes } = _fetchData<string[]>(
-        `data/stat/list-${i}.json`,
-      );
-      const postNameList = await listRes;
-      if (!postNameList) {
-        throw new Error(
-          `无法初始化IndexedDB，因为请求第${i}批postNameList失败`,
-        );
-      }
-      const infoPromises = postNameList.map(
-        name => _fetchPostMeta(name).response,
-      );
-      await Promise.all(infoPromises);
+    const { response: listRes } = _fetchData<string[]>(`data/name-list.json`);
+    const postNameList = await listRes;
+    if (!postNameList) {
+      throw new Error(`无法初始化IndexedDB，因为请求postNameList失败`);
+    }
+
+    const infoPromises = postNameList.map(
+      name => _fetchPostMeta(name).response,
+    );
+    const BATCH_SIZE = parseInt(import.meta.env.VITE_BATCH_SIZE);
+    for (let i = 0; i < infoPromises.length; i += BATCH_SIZE) {
+      await Promise.all(infoPromises.slice(i, i + BATCH_SIZE));
     }
 
     await db.post.where('metaVer').below(currentResVer).delete();
@@ -165,7 +160,7 @@ async function _fetchSinglePage(
     }
 
     // 检查并初始化IndexedDB
-    await _checkAndInitDB(total, pageCount);
+    await _checkAndInitDB(total);
 
     let collection: Collection<
       Blog.Post.DBItem,

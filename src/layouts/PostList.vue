@@ -139,6 +139,10 @@ const { currentPage, pageCount, isFirstPage, isLastPage, prev, next } =
     onPageChange: async ({ currentPage }) => {
       await fetchPage(currentPage);
       indexRecord.value = currentPage;
+      scroll({
+        top: 0,
+        behavior: 'smooth',
+      });
     },
   });
 const { pause, resume } = watchEffect(async () => {

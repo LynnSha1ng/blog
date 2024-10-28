@@ -1,17 +1,20 @@
-import { readFileSync, writeFileSync } from 'node:fs';
-import { parse } from 'yaml';
+import { readFile, writeFile } from 'node:fs/promises';
+import { join as pathJoin } from 'node:path';
+import { parse as yamlParse } from 'yaml';
 
-export function genLinkData() {
+const DATA_DIR = process.env.DATA_DIR!;
+
+export async function genLinkData() {
   try {
-    const dataRaw = readFileSync('./public/link-exchange.yaml', 'utf-8');
-    const data = parse(dataRaw);
-    writeFileSync(
-      './public/data/links.json',
+    const dataRaw = await readFile('./public/link-exchange.yaml', 'utf-8');
+    const data = yamlParse(dataRaw);
+    await writeFile(
+      pathJoin(DATA_DIR, 'links.json'),
       JSON.stringify(data.links, null, 2),
     );
-    console.log('成功生成link-exchange数据。');
+    console.log('成功生成links友链数据。');
   } catch (err) {
-    console.log('生成友链数据失败：\n', err);
+    console.error(err);
     process.exit(1);
   }
 }

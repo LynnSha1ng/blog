@@ -1,11 +1,9 @@
 import { readFile, writeFile } from 'node:fs/promises';
-import { join, basename } from 'node:path';
+import { join as pathJoin } from 'node:path';
 import { doGenDataWork } from './_template.js';
 
-const LIMIT = parseInt(process.env.VITE_LIST_LIMIT!);
-
+const DATA_DIR = process.env.DATA_DIR!;
 const INFO_DIR = process.env.INFO_DATA_DIR!;
-const STAT_DIR = process.env.STAT_DATA_DIR!;
 
 export async function genStatData() {
   const cateStatMap = new Map<string, number>();
@@ -14,55 +12,41 @@ export async function genStatData() {
   const postTotal = await doGenDataWork({
     sourceDir: INFO_DIR,
 
-    targetDir: STAT_DIR,
-
     async work(batch) {
-      let listIndex = 1;
-      const batchNoSuffix = batch.map(filename => basename(filename, '.json'));
-      for (let i = 0; i < batchNoSuffix.length; i += LIMIT) {
-        const list = batchNoSuffix.slice(i, i + LIMIT);
-        const path = join(STAT_DIR, `list-${listIndex}.json`);
-        await writeFile(path, JSON.stringify(list, null, 2));
-        listIndex += 1;
-      }
-
-      const readPromises = batchNoSuffix.map(async filename => {
-        const content = await readFile(
-          join(INFO_DIR, `${filename}.json`),
-          'utf8',
-        );
+      const readPromises = batch.map(async filename => {
+        const raw = await readFile(pathJoin(INFO_DIR, filename), 'utf8');
+        const { category, tag } = JSON.parse(raw);
         return {
-          name: filename,
-          ...JSON.parse(content),
+          category,
+          tag,
         };
       });
       const readResults = await Promise.all(readPromises);
 
-      for (const item of readResults) {
-        const cate = item.category;
-        if (!cateStatMap.has(cate)) {
-          cateStatMap.set(cate, 0);
+      for (const { category, tag: tags } of readResults) {
+        if (!cateStatMap.has(category)) {
+          cateStatMap.set(category, 0);
         }
-        cateStatMap.set(cate, cateStatMap.get(cate)! + 1);
+        cateStatMap.set(category, cateStatMap.get(category) + 1);
 
-        for (const tag of item.tag) {
+        for (const tag of tags) {
           if (!tagStatMap.has(tag)) {
             tagStatMap.set(tag, 0);
           }
-          tagStatMap.set(tag, tagStatMap.get(tag)! + 1);
+          tagStatMap.set(tag, tagStatMap.get(tag) + 1);
         }
       }
     },
   });
 
   await writeFile(
-    join(STAT_DIR, 'stat.json'),
+    pathJoin(DATA_DIR, 'stat.json'),
     JSON.stringify(
       {
         total: {
           post: postTotal,
-          cate: Array.from(cateStatMap.entries()).length,
-          tag: Array.from(tagStatMap.entries()).length,
+          cate: cateStatMap.size,
+          tag: tagStatMap.size,
         },
         cate: Object.fromEntries(cateStatMap),
         tag: Object.fromEntries(tagStatMap),
@@ -72,5 +56,5 @@ export async function genStatData() {
     ),
   );
 
-  console.log('成功生成stat数据。');
+  console.log('成功生成postStat帖子统计数据。');
 }
