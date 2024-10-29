@@ -1,24 +1,30 @@
 <template>
-  <BlogNav :title :itemsMid />
-
   <RouterView v-slot="{ Component }">
     <template v-if="Component">
+      <BlogNav :title :itemsMid />
+
       <Transition name="fade" mode="out-in" :duration="150">
         <Suspense>
           <component :is="Component" />
           <template #fallback>
-            <div class="loading">
-              <h1>加载中...</h1>
+            <div class="loading-wrapper">
+              <div class="loading-placeholder"></div>
+              <div class="loading">
+                <h1>加载中...</h1>
+              </div>
             </div>
           </template>
         </Suspense>
       </Transition>
+
+      <BlogFooter />
     </template>
   </RouterView>
 </template>
 
 <script setup lang="ts">
 import BlogNav from '@/components/BlogNav.vue';
+import BlogFooter from './components/BlogFooter.vue';
 
 const title = "LynnSha1ng's Blog";
 const itemsMid = [
@@ -46,10 +52,15 @@ const itemsMid = [
 </script>
 
 <style lang="scss">
-  .loading{
-    @include flex(center,center);
-    position: absolute;
-    inset:0;
-    background-color: rgba(0,0,0,0.5);
-  }
+.loading-placeholder {
+  height: calc(100dvh - $nav-h - $footer-h - 12px);
+}
+
+.loading {
+  @include flex(center, center);
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  background-color: rgba(0, 0, 0, 0.5);
+}
 </style>
