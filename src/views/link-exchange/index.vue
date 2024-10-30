@@ -1,5 +1,5 @@
 <template>
-  <div class="content-main-page friend-links">
+  <div class="content-main-page friend-links" v-show="mounted">
     <h1 class="page-title">
       <span class="title-label">友情链接</span>
       <hr class="border-grey" />
@@ -35,6 +35,9 @@
 
 <script setup lang="ts">
 import { fetchLinkExchange } from '@/api';
+import { useMountedForTransition } from '@/utils/composable';
+
+const { mounted } = useMountedForTransition();
 
 const data = await fetchLinkExchange();
 </script>
@@ -100,11 +103,11 @@ $bg-hover-w: calc(100% + $w-left-all);
 
   &:not(:hover) {
     .item-bg {
-      animation: bounce-back 1s ease 0.2s backwards;
+      animation: bounce-back $trans-duration * 2 ease $trans-delay backwards;
     }
 
     .logo-img {
-      animation: rotate-back 1s ease 0.2s backwards;
+      animation: rotate-back $trans-duration * 2 ease $trans-delay backwards;
     }
   }
 }

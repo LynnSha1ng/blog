@@ -84,7 +84,7 @@ import { formatDate } from '@/utils/tool';
 <style lang="scss" scoped>
 .post-item {
   overflow: hidden;
-  max-width: 520px;
+  max-width: $two-col-post-w-max;
   border-radius: 12px;
   background-color: var(--bg-2);
 

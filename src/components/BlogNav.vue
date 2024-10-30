@@ -40,7 +40,7 @@
           title="随便逛逛"
           @click="
             e => {
-              navigate(e);
+              if (randomPostName !== ' ') navigate(e);
               updateRandomPostName();
             }
           "
@@ -158,7 +158,7 @@ const menuOpen = ref(false);
 
 <style lang="scss" scoped>
 .top-nav-placeholder {
-  height: 60px;
+  height: $nav-h;
 }
 
 .top-nav {
@@ -166,7 +166,7 @@ const menuOpen = ref(false);
   z-index: 1145;
   @include flex(space-between, center);
   width: 100%;
-  height: 60px;
+  height: $nav-h;
   max-width: $scr-w-max;
   padding: 0 12px;
   background-color: color-mix(in oklch, var(--bg-2), transparent 25%);

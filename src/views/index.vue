@@ -17,11 +17,15 @@
 <script setup lang="ts">
 import PostCover from '@/components/PostCover.vue';
 import SideCards from '@/components/SideCards.vue';
+
+import { sleep } from '@/utils/tool';
+
+await sleep(1000);
 </script>
 
 <style lang="scss">
 .blog-home {
-  min-height: $scr-h-without-top-nav;
+  min-height: $scr-h-without-nav;
 }
 
 .blog-content {

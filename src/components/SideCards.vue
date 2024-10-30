@@ -136,8 +136,8 @@ function getShownData<T>(
     hasMore,
   };
 }
-const { shownData: cateShown, hasMore: cateHasMore } = getShownData(cate, 5);
-const { shownData: tagShown, hasMore: tagHasMore } = getShownData(tag, 2);
+const { shownData: cateShown, hasMore: cateHasMore } = getShownData(cate, 8);
+const { shownData: tagShown, hasMore: tagHasMore } = getShownData(tag, 75);
 
 // TransitionGroup淡出优化
 // BUG 淡出的卡片下方的卡片偶尔丢失move动画
@@ -156,7 +156,7 @@ const setRelativeTop = (targetEl: Element) => {
 <style lang="scss" scoped>
 .side-cards {
   flex-shrink: 0;
-  width: 300px;
+  width: $side-card-w;
   @include screenBelow($lg) {
     display: none;
   }

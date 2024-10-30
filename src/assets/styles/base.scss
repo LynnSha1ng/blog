@@ -52,7 +52,8 @@ html {
 }
 
 body {
-  margin: 0;
+  max-width: $scr-w-max;
+  margin: 0 auto;
   background-color: var(--bg-1);
   font-family:
     'Microsoft Yahei',
@@ -70,9 +71,6 @@ body {
     sans-serif;
   color: var(--text-regular);
   @include transition((background-color, color), 0.5s);
-  // transition:
-  //   background-color 0.5s,
-  //   color 0.5s;
   -webkit-tap-highlight-color: transparent;
   -webkit-font-smoothing: antialiased;
 }
