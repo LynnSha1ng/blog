@@ -22,7 +22,7 @@ function _fetch<T>(url: string): ResponseWithCancelFn<T> {
 
       const contentType = res.headers.get('Content-Type');
       if (contentType?.includes('application/json')) {
-        return res.json() as Promise<T>;
+        return res.json();
       } else {
         throw new Error(`意外的Content-Type: ${contentType}`);
       }
@@ -35,6 +35,7 @@ function _fetch<T>(url: string): ResponseWithCancelFn<T> {
       }
       return void 0;
     });
+
   return {
     response,
     cancel: () => controller.abort(),
@@ -53,21 +54,18 @@ function _updateToLatestVer(verKey: string): void {
   localStorageUtils.setItem('ver', verObj);
 }
 
-interface FetchOptions {
-  localSrc: 'LocalStorage' | 'IndexedDB';
-  storageKey?: string;
-  query?: () => PromiseExtended;
-  resAffected?: 'meta' | 'cont';
-}
-
 function _fetchData<T>(
   url: string,
-  options?: FetchOptions,
+  options?: {
+    localSrc: 'LocalStorage' | 'IndexedDB';
+    storageKey?: string;
+    query?: () => PromiseExtended;
+    resAffected?: Blog.Post.VerKey;
+  },
 ): ResponseWithCancelFn<T> {
   if (!options) return _fetch<T>(url);
 
   const { localSrc, storageKey, query, resAffected } = options;
-  const verKeyDB = (resAffected + 'Ver') as Blog.Post.VerKey;
 
   if (localSrc === 'LocalStorage') {
     if (_isLatestVer(storageKey!)) {
@@ -87,53 +85,54 @@ function _fetchData<T>(
       cancel,
     };
   }
-  //IndexedDB
-  return promiseWithCancelFn<T>(
-    query!().then(
-      (postObj: T & { id: number } & { [K in Blog.Post.VerKey]?: number }) => {
-        if (postObj && postObj[verKeyDB] === currentResVer) {
-          // console.log('使用最新IndexedDB数据');
-          const { id, metaVer, contVer, ...data } = postObj;
-          return <T>data;
-        }
-        // console.log('Indexed数据不存在或非最新，使用fetch');
-        const { response } = _fetch<T>(url);
-        return response.then(async data => {
-          if (!data) return void 0;
 
-          let dataToStore: T & { [K in Blog.Post.VerKey]?: number };
-          if (postObj) {
-            dataToStore = Object.assign(postObj, data);
-          } else {
-            dataToStore = data;
-          }
-          dataToStore[verKeyDB] = currentResVer;
-          await db.post.put(
-            dataToStore as unknown as InsertType<Blog.Post.DBItem, 'id'>,
-          );
-          return data;
-        });
-      },
-    ),
+  // IndexedDB
+  return promiseWithCancelFn<T>(
+    query!().then((postObj: Blog.Post.DBItem) => {
+      if (postObj && postObj.ver[resAffected!] === currentResVer) {
+        // console.log('使用最新IndexedDB数据');
+        const { id, ver, ...data } = postObj;
+        return data as T;
+      }
+      // console.log('Indexed数据不存在或非最新，使用fetch');
+      const { response } = _fetch<T>(url);
+      return response.then(async data => {
+        if (!data) return void 0;
+
+        let dataToStore: T & { ver: Blog.Post.VerRec };
+        if (postObj) {
+          dataToStore = Object.assign(postObj, data);
+        } else {
+          dataToStore = {
+            ...data,
+            ver: {},
+          };
+        }
+        dataToStore.ver[resAffected!] = currentResVer;
+        await db.post.put(
+          dataToStore as unknown as InsertType<Blog.Post.DBItem, 'id'>,
+        );
+
+        return data;
+      });
+    }),
     // () => console.log('取消IndexedDB查询'),
   );
 }
 
-async function _checkAndInitDB(total: number): Promise<void> {
+async function _checkAndInitDB(total: number) {
   const latestCount = await db.post
     .where('metaVer')
     .equals(currentResVer)
     .count();
   if (latestCount < total) {
-    const { response: listRes } = _fetchData<string[]>(`data/name-list.json`);
-    const postNameList = await listRes;
+    const postNameList =
+      await _fetchData<string[]>(`data/name-list.json`).response;
     if (!postNameList) {
       throw new Error(`无法初始化IndexedDB，因为请求postNameList失败`);
     }
 
-    const infoPromises = postNameList.map(
-      name => _fetchPostMeta(name).response,
-    );
+    const infoPromises = postNameList.map(_fetchPostMeta);
     const BATCH_SIZE = parseInt(import.meta.env.VITE_BATCH_SIZE);
     for (let i = 0; i < infoPromises.length; i += BATCH_SIZE) {
       await Promise.all(infoPromises.slice(i, i + BATCH_SIZE));
@@ -151,7 +150,7 @@ async function _fetchSinglePage(
     category?: string;
     tag?: string;
   },
-): Promise<Blog.Post.DBItem[] | undefined> {
+) {
   try {
     const { index, category, tag } = params;
     const pageCount = Math.ceil(total / LIMIT);
@@ -216,11 +215,7 @@ async function _fetchSinglePage(
   }
 }
 
-export async function fetchStat(): Promise<Blog.Stat> {
-  const { response } = _fetchData<Blog.Stat>('data/stat/stat.json', {
-    localSrc: 'LocalStorage',
-    storageKey: 'postStat',
-  });
+export async function fetchStat() {
   const _statEmpty: Blog.Stat = {
     total: {
       post: void 0,
@@ -230,7 +225,12 @@ export async function fetchStat(): Promise<Blog.Stat> {
     cate: {},
     tag: {},
   };
-  const stat = await response;
+
+  const stat = await _fetchData<Blog.Stat>('data/stat/stat.json', {
+    localSrc: 'LocalStorage',
+    storageKey: 'postStat',
+  }).response;
+
   if (!stat) return _statEmpty;
   else return stat;
 }
@@ -240,32 +240,39 @@ function _fetchPostMeta(name: string) {
     localSrc: 'IndexedDB',
     query: () => db.post.get({ name }),
     resAffected: 'meta',
-  });
+  }).response;
 }
 
-export async function fetchWholePost(name: string): Promise<Blog.Post.Whole> {
-  const { response: metaRes } = _fetchPostMeta(name);
-  const info = await metaRes;
+export async function fetchWholePost(name: string) {
+  const info = await _fetchPostMeta(name);
   if (!info) {
     throw new Error('postMeta意外地为undefined');
   }
 
-  const { response: contRes } = _fetchData<{
+  const contData = await _fetchData<{
     name: string;
     cont: string;
   }>(`data/cont/${name}.json`, {
     localSrc: 'IndexedDB',
     query: () => db.post.get({ name }),
     resAffected: 'cont',
-  });
-  const contData = await contRes;
+  }).response;
   if (!contData) {
     throw new Error('未获取到文章内容');
   }
+
   return {
     ...info,
     cont: contData.cont,
-  };
+  } as Blog.Post.Whole;
+}
+
+export function fetchPostToc(name: string) {
+  return _fetchData(`data/toc/${name}.json`, {
+    localSrc: 'IndexedDB',
+    query: () => db.post.get({ name }),
+    resAffected: 'toc',
+  }).response;
 }
 
 export async function fetchRandomPostName() {
@@ -274,21 +281,15 @@ export async function fetchRandomPostName() {
   return randomPost?.name;
 }
 
-export function fetchAllPosts(
-  index: number,
-  total: number,
-): ResponseWithCancelFn<Blog.Post.DBItem[]> {
-  return promiseWithCancelFn(_fetchSinglePage('all', total, { index }), () =>
-    console.log('all: 取消请求'),
+export function fetchAllPosts(index: number, total: number) {
+  return promiseWithCancelFn<Blog.Post.DBItem[]>(
+    _fetchSinglePage('all', total, { index }),
+    () => console.log('all: 取消请求'),
   );
 }
 
-export function fetchPostsByTag(
-  tag: string,
-  index: number,
-  total: number,
-): ResponseWithCancelFn<Blog.Post.DBItem[]> {
-  return promiseWithCancelFn(
+export function fetchPostsByTag(tag: string, index: number, total: number) {
+  return promiseWithCancelFn<Blog.Post.DBItem[]>(
     _fetchSinglePage('tag', total, { index, tag }),
     () => console.log('tag: 取消请求'),
   );
@@ -298,14 +299,16 @@ export function fetchPostsByCategory(
   category: string,
   index: number,
   total: number,
-): ResponseWithCancelFn<Blog.Post.DBItem[]> {
-  return promiseWithCancelFn(
+) {
+  return promiseWithCancelFn<Blog.Post.DBItem[]>(
     _fetchSinglePage('category', total, { index, category }),
     () => console.log('cate: 取消请求'),
   );
 }
 
-export async function fetchLinkExchange() {
-  const { response } = _fetchData<Blog.FriendLink[]>('data/links.json');
-  return await response;
+export function fetchLinkExchange() {
+  return _fetchData<Blog.FriendLink[]>('data/links.json', {
+    localSrc: 'LocalStorage',
+    storageKey: 'friendLinks',
+  }).response;
 }

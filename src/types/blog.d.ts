@@ -9,20 +9,31 @@ interface _PostDataAll {
   birthTime: string;
   mTime: string;
   cont: string;
-  metaVer: number;
-  contVer: number;
+  toc: {
+    level: number;
+    title: string;
+  }[];
+  ver: {
+    meta?: number;
+    cont?: number;
+    toc?: number;
+  };
 }
 
 declare global {
   namespace Blog {
     namespace Post {
-      type VerKey = 'metaVer' | 'contVer';
+      type DBItem = Optional<_PostDataAll, 'cont' | 'toc'>;
 
-      type DBItem = Optional<_PostDataAll, 'cont' | 'contVer'>;
-
-      type Whole = Omit<_PostDataAll, 'id' | VerKey>;
+      type Whole = Omit<_PostDataAll, 'id' | 'toc' | 'ver'>;
 
       type Meta = Omit<Whole, 'cont'>;
+
+      type Toc = _PostDataAll['toc'];
+
+      type VerRec = _PostDataAll['ver'];
+
+      type VerKey = keyof VerRec;
     }
 
     interface Pagination {
