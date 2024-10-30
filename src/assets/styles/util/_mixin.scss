@@ -1,16 +1,8 @@
-$xs2: 360px;
-$xs: 540px;
-$sm: 640px;
-$md: 768px;
-$lg: 900px;
-$xl: 1024px;
-$xl2: 1280px;
+@use 'sass:list';
 
-$scr-w-max: 520px * 2 + 300px + 12px * 4; // 1388px
-$scr-h-without-top-nav: calc(100dvh - 60px - 12px * 2);
-
+// 过渡效果封装
 @mixin transition($property, $duration: 0.35s, $delay: null) {
-  @if length($property) == 1 {
+  @if list.length($property) == 1 {
     transition: $property $duration $delay;
   } @else {
     transition-property: $property;
@@ -19,30 +11,7 @@ $scr-h-without-top-nav: calc(100dvh - 60px - 12px * 2);
   }
 }
 
-@mixin screenBelow($breakpoint) {
-  @media screen and (max-width: $breakpoint) {
-    @content;
-  }
-}
-
-@mixin screenAbove($breakpoint) {
-  @media screen and (min-width: $breakpoint) {
-    @content;
-  }
-}
-
-@mixin screenBetween($min, $max) {
-  @media screen and (min-width: $min) and (max-width: $max) {
-    @content;
-  }
-}
-
-@mixin onDarkMode {
-  @media (prefers-color-scheme: dark) {
-    @content;
-  }
-}
-
+// flex基本属性封装
 @mixin flex($justify: null, $align: null, $flow: null) {
   display: flex;
   flex-flow: $flow;
@@ -50,6 +19,7 @@ $scr-h-without-top-nav: calc(100dvh - 60px - 12px * 2);
   align-items: $align;
 }
 
+// 行文本溢出省略
 @mixin line-clamp($lines) {
   display: -webkit-box;
   -webkit-box-orient: vertical;
@@ -59,6 +29,7 @@ $scr-h-without-top-nav: calc(100dvh - 60px - 12px * 2);
   overflow-wrap: break-word;
 }
 
+// 行内分隔符
 @mixin inline-separator(
   $sep,
   $margin-inline: 4px,
@@ -76,6 +47,7 @@ $scr-h-without-top-nav: calc(100dvh - 60px - 12px * 2);
   }
 }
 
+// 子元素等差延迟过渡效果的父/子元素时间设置
 @mixin staggered-transition-time-manage(
   $type,
   $child-count,

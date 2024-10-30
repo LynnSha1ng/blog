@@ -29,7 +29,7 @@ export default defineConfig(({ mode }) => {
       preprocessorOptions: {
         scss: {
           api: 'modern-compiler',
-          additionalData: '@import "@/assets/styles/util.scss";',
+          additionalData: '@use "@/assets/styles/util" as *;',
         },
       },
     },
