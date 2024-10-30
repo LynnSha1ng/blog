@@ -7,6 +7,7 @@ const POST_DIR = process.env.POST_DIR!;
 const DATA_DIR = process.env.DATA_DIR!;
 const INFO_DIR = process.env.INFO_DATA_DIR!;
 const CONT_DIR = process.env.CONT_DATA_DIR!;
+const TOC_DIR = process.env.TOC_DATA_DIR!;
 
 export async function genPostData() {
   const postNameAll = [];
@@ -14,7 +15,7 @@ export async function genPostData() {
   await doGenDataWork({
     sourceDir: POST_DIR,
 
-    targetDir: [INFO_DIR, CONT_DIR],
+    targetDir: [INFO_DIR, CONT_DIR, TOC_DIR],
 
     async work(batch) {
       const batchNoSuffix = batch.map(filename => basename(filename, '.md'));
@@ -36,6 +37,19 @@ export async function genPostData() {
         if (data === null) {
           throw new Error('存在格式错误的文章，请改正后再试！');
         }
+
+        const toc: { level: number; title: string }[] = [];
+        const lines = data[2].split(/\r?\n/).filter(Boolean);
+        for (const line of lines) {
+          const header = line.match(/^(#+)\s+(.*)$/);
+          if (header) {
+            toc.push({
+              level: header[1].length,
+              title: header[2],
+            });
+          }
+        }
+
         const fileStat = await stat(pathJoin(POST_DIR, `${name}.md`));
         await writeFile(
           pathJoin(INFO_DIR, `${name}.json`),
@@ -50,6 +64,7 @@ export async function genPostData() {
             2,
           ),
         );
+
         await writeFile(
           pathJoin(CONT_DIR, `${name}.json`),
           JSON.stringify(
@@ -61,7 +76,13 @@ export async function genPostData() {
             2,
           ),
         );
+
+        await writeFile(
+          pathJoin(TOC_DIR, `${name}.json`),
+          JSON.stringify(toc, null, 2),
+        );
       });
+
       await Promise.all(writePromises);
     },
   });
@@ -71,5 +92,7 @@ export async function genPostData() {
     JSON.stringify(postNameAll, null, 2),
   );
 
-  console.log('成功生成postMeta帖子元数据、postCont帖子正文数据。');
+  console.log(
+    '成功生成postMeta帖子元数据、postCont帖子正文数据、postToc帖子TOC数据。',
+  );
 }
