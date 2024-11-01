@@ -111,6 +111,6 @@ export function formatTime(ms: number) {
   return `${Math.floor(ms / year)}年`;
 }
 
-export function staticResUrl(path: string) {
-  return import.meta.env.BASE_URL + path.startsWith('/') ? path.slice(1) : path;
+export function staticResUrl(absolutePath: string) {
+  return import.meta.env.BASE_URL + absolutePath.slice(1);
 }

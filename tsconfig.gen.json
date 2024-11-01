@@ -1,6 +1,9 @@
 {
   "include": [
-    "scripts/*.ts"
+    "scripts/**/*.ts"
+  ],
+  "exclude": [
+    "scripts/dist"
   ],
   "compilerOptions": {
     "declaration": false,

@@ -2,11 +2,16 @@ import { readFile, writeFile } from 'node:fs/promises';
 import { join as pathJoin } from 'node:path';
 import { parse as yamlParse } from 'yaml';
 
+const INFO_DIR = process.env.INFO_DIR!;
+
 const DATA_DIR = process.env.DATA_DIR!;
 
 export async function genLinkData() {
   try {
-    const dataRaw = await readFile('./public/link-exchange.yaml', 'utf-8');
+    const dataRaw = await readFile(
+      pathJoin(INFO_DIR, 'link-exchange.yaml'),
+      'utf-8',
+    );
     const data = yamlParse(dataRaw);
     await writeFile(
       pathJoin(DATA_DIR, 'links.json'),

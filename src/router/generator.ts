@@ -39,7 +39,15 @@ export function generateRoutes(options: {
   );
 
   // 必须根据目录深度排序
-  const pathDepth = (path: string) => path.split('/').length;
+  const pathDepth = (path: string) => {
+    let count = 0;
+    for (const char of path) {
+      if (char === '/') {
+        count += 1;
+      }
+    }
+    return count + 1;
+  };
   const viewPaths = Object.keys(viewsRaw).sort(
     (a, b) => pathDepth(a) - pathDepth(b),
   );

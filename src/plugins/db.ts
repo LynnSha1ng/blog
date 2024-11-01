@@ -8,7 +8,7 @@ const db = new Dexie('Blog') as Dexie & {
 };
 
 db.version(1).stores({
-  post: '++id, &name, category, *tag, birthTime, metaVer',
+  post: '++id, &name, category, *tag, birthTime, ver.meta',
   pagination: '[mark+index], firstEntry, ver',
 });
 

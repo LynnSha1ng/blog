@@ -1,4 +1,4 @@
-import { readdir, access, mkdir, unlink, stat } from 'node:fs/promises';
+import { readdir, access, mkdir, unlink } from 'node:fs/promises';
 import { join as pathJoin } from 'node:path';
 
 /**
@@ -23,12 +23,13 @@ async function _batchWork(target: any[], fn: (batch: any[]) => Promise<any>) {
 async function _checkTarget(target: string) {
   try {
     await access(target);
-    const targetFiles = await readdir(target);
+    const targetFiles = await readdir(target, {
+      withFileTypes: true,
+    });
     if (targetFiles.length !== 0) {
-      const deletePromises = targetFiles.map(async filename => {
-        const stats = await stat(pathJoin(target, filename));
-        if (stats.isFile()) {
-          await unlink(pathJoin(target, filename));
+      const deletePromises = targetFiles.map(async dirent => {
+        if (dirent.isFile()) {
+          await unlink(pathJoin(target, dirent.name));
         }
       });
       await _batchWork(deletePromises, batch => Promise.all(batch));
@@ -60,9 +61,14 @@ export async function doGenDataWork(options: {
       await Promise.all(targetDir.map(_checkTarget));
     }
 
-    const files = await readdir(sourceDir);
-    await _batchWork(files, work);
-    return files.length;
+    const dirents = await readdir(sourceDir, {
+      withFileTypes: true,
+    });
+    const filenames = dirents
+      .filter(dirent => dirent.isFile())
+      .map(file => file.name);
+    await _batchWork(filenames, work);
+    return filenames.length;
   } catch (err) {
     console.error(err);
     process.exit(1);

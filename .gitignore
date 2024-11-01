@@ -1,8 +1,10 @@
 node_modules
 dist
+__dev__
 
 .vscode/*
 !.vscode/extensions.json
 
+*.local
 *.code-workspace
 *.tsbuildinfo

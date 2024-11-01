@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "run-s gen dev-only",
+    "dev": "run-s \"gen -d\" dev-only",
     "build:local": "run-s type-check gen:run \"build-only {@}\" --",
     "build:workflow": "run-s type-check build-only",
     "dev-only": "vite",
@@ -12,8 +12,8 @@
     "preview": "vite preview",
     "type-check": "vue-tsc --build --force",
     "gen:build": "tsc -p tsconfig.gen.json",
-    "gen:run": "node --env-file=.env scripts/dist",
-    "gen": "run-s gen:build gen:run",
+    "gen:run": "node scripts/dist/gen/run.js",
+    "gen": "run-s gen:build \"gen:run {1}\" --",
     "lint": "eslint . --fix",
     "format": "prettier --write src/ scripts/"
   },

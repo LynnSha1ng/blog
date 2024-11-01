@@ -3,18 +3,18 @@ import { join as pathJoin } from 'node:path';
 import { doGenDataWork } from './_template.js';
 
 const DATA_DIR = process.env.DATA_DIR!;
-const INFO_DIR = process.env.INFO_DATA_DIR!;
+const META_DIR = process.env.META_DATA_DIR!;
 
 export async function genStatData() {
   const cateStatMap = new Map<string, number>();
   const tagStatMap = new Map<string, number>();
 
   const postTotal = await doGenDataWork({
-    sourceDir: INFO_DIR,
+    sourceDir: META_DIR,
 
     async work(batch) {
       const readPromises = batch.map(async filename => {
-        const raw = await readFile(pathJoin(INFO_DIR, filename), 'utf8');
+        const raw = await readFile(pathJoin(META_DIR, filename), 'utf8');
         const { category, tag } = JSON.parse(raw);
         return {
           category,

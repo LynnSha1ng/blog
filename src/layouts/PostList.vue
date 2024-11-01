@@ -10,10 +10,10 @@
 
     <ul :class="['post-list', `--${itemStyle}`]">
       <PostListItem
+        v-for="item in data"
+        :key="`post-${item.id}`"
         :data="item"
-        :item-style
-        v-for="{ metaVer, contVer, cont, ...item } in data"
-        :key="`post-${item.name}`" />
+        :item-style />
     </ul>
 
     <div class="pagination">

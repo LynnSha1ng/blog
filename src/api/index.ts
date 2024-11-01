@@ -11,13 +11,25 @@ import {
 const currentResVer = parseInt(import.meta.env.VITE_RESOURCE_VER);
 const LIMIT = parseInt(import.meta.env.VITE_LIST_LIMIT);
 
-function _fetch<T>(url: string): ResponseWithCancelFn<T> {
+function _handleDataPath(absolutePath: string) {
+  const path = import.meta.env.DEV
+    ? absolutePath.replace(/^\/data\//, 'data/__dev__/')
+    : absolutePath.slice(1);
+  return import.meta.env.BASE_URL + path;
+}
+/**
+ * 处理生产/开发环境下请求 public 目录/根目录下 data 目录内文件的路径
+ * @param absolutePath Vite 约定的资源绝对路径
+ */
+const _hdp = _handleDataPath;
+
+function _fetch<T>(path: string): ResponseWithCancelFn<T> {
   const controller = new AbortController();
   const { signal } = controller;
-  const response = fetch(import.meta.env.BASE_URL + url, { signal })
+  const response = fetch(path, { signal })
     .then(res => {
       if (!res.ok) {
-        throw new Error(`请求'${url}'失败, 状态: ${res.status}`);
+        throw new Error(`请求'${path}'失败, 状态: ${res.status}`);
       }
 
       const contentType = res.headers.get('Content-Type');
@@ -29,7 +41,7 @@ function _fetch<T>(url: string): ResponseWithCancelFn<T> {
     })
     .catch((err: Error) => {
       if (err.name === 'AbortError') {
-        console.log(`${url}：取消请求`);
+        console.log(`${path}：取消请求`);
       } else {
         console.error(err);
       }
@@ -55,7 +67,7 @@ function _updateToLatestVer(verKey: string): void {
 }
 
 function _fetchData<T>(
-  url: string,
+  path: string,
   options?: {
     localSrc: 'LocalStorage' | 'IndexedDB';
     storageKey?: string;
@@ -63,7 +75,7 @@ function _fetchData<T>(
     resAffected?: Blog.Post.VerKey;
   },
 ): ResponseWithCancelFn<T> {
-  if (!options) return _fetch<T>(url);
+  if (!options) return _fetch<T>(path);
 
   const { localSrc, storageKey, query, resAffected } = options;
 
@@ -75,7 +87,7 @@ function _fetchData<T>(
     }
 
     // console.log('localStorage数据不存在或非最新，使用fetch');
-    const { response, cancel } = _fetch<T>(url);
+    const { response, cancel } = _fetch<T>(path);
     return {
       response: response.then(data => {
         localStorageUtils.setItem(storageKey!, data);
@@ -95,8 +107,7 @@ function _fetchData<T>(
         return data as T;
       }
       // console.log('Indexed数据不存在或非最新，使用fetch');
-      const { response } = _fetch<T>(url);
-      return response.then(async data => {
+      return _fetch<T>(path).response.then(async data => {
         if (!data) return void 0;
 
         let dataToStore: T & { ver: Blog.Post.VerRec };
@@ -122,12 +133,13 @@ function _fetchData<T>(
 
 async function _checkAndInitDB(total: number) {
   const latestCount = await db.post
-    .where('metaVer')
+    .where('ver.meta')
     .equals(currentResVer)
     .count();
   if (latestCount < total) {
-    const postNameList =
-      await _fetchData<string[]>(`data/name-list.json`).response;
+    const postNameList = await _fetchData<string[]>(
+      _hdp(`/data/name-list.json`),
+    ).response;
     if (!postNameList) {
       throw new Error(`无法初始化IndexedDB，因为请求postNameList失败`);
     }
@@ -138,7 +150,7 @@ async function _checkAndInitDB(total: number) {
       await Promise.all(infoPromises.slice(i, i + BATCH_SIZE));
     }
 
-    await db.post.where('metaVer').below(currentResVer).delete();
+    await db.post.where('ver.meta').below(currentResVer).delete();
   }
 }
 
@@ -226,7 +238,7 @@ export async function fetchStat() {
     tag: {},
   };
 
-  const stat = await _fetchData<Blog.Stat>('data/stat/stat.json', {
+  const stat = await _fetchData<Blog.Stat>(_hdp('/data/stat.json'), {
     localSrc: 'LocalStorage',
     storageKey: 'postStat',
   }).response;
@@ -236,7 +248,7 @@ export async function fetchStat() {
 }
 
 function _fetchPostMeta(name: string) {
-  return _fetchData<Blog.Post.Meta>(`data/info/${name}.json`, {
+  return _fetchData<Blog.Post.Meta>(_hdp(`/data/meta/${name}.json`), {
     localSrc: 'IndexedDB',
     query: () => db.post.get({ name }),
     resAffected: 'meta',
@@ -252,7 +264,7 @@ export async function fetchWholePost(name: string) {
   const contData = await _fetchData<{
     name: string;
     cont: string;
-  }>(`data/cont/${name}.json`, {
+  }>(_hdp(`/data/cont/${name}.json`), {
     localSrc: 'IndexedDB',
     query: () => db.post.get({ name }),
     resAffected: 'cont',
@@ -268,7 +280,7 @@ export async function fetchWholePost(name: string) {
 }
 
 export function fetchPostToc(name: string) {
-  return _fetchData(`data/toc/${name}.json`, {
+  return _fetchData(_hdp(`/data/toc/${name}.json`), {
     localSrc: 'IndexedDB',
     query: () => db.post.get({ name }),
     resAffected: 'toc',
@@ -307,7 +319,7 @@ export function fetchPostsByCategory(
 }
 
 export function fetchLinkExchange() {
-  return _fetchData<Blog.FriendLink[]>('data/links.json', {
+  return _fetchData<Blog.FriendLink[]>(_hdp('/data/links.json'), {
     localSrc: 'LocalStorage',
     storageKey: 'friendLinks',
   }).response;

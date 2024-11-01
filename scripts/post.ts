@@ -5,7 +5,7 @@ import { doGenDataWork } from './_template.js';
 
 const POST_DIR = process.env.POST_DIR!;
 const DATA_DIR = process.env.DATA_DIR!;
-const INFO_DIR = process.env.INFO_DATA_DIR!;
+const META_DIR = process.env.META_DATA_DIR!;
 const CONT_DIR = process.env.CONT_DATA_DIR!;
 const TOC_DIR = process.env.TOC_DATA_DIR!;
 
@@ -15,7 +15,7 @@ export async function genPostData() {
   await doGenDataWork({
     sourceDir: POST_DIR,
 
-    targetDir: [INFO_DIR, CONT_DIR, TOC_DIR],
+    targetDir: [META_DIR, CONT_DIR, TOC_DIR],
 
     async work(batch) {
       const batchNoSuffix = batch.map(filename => basename(filename, '.md'));
@@ -52,7 +52,7 @@ export async function genPostData() {
 
         const fileStat = await stat(pathJoin(POST_DIR, `${name}.md`));
         await writeFile(
-          pathJoin(INFO_DIR, `${name}.json`),
+          pathJoin(META_DIR, `${name}.json`),
           JSON.stringify(
             {
               name,
