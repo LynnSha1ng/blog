@@ -1,7 +1,7 @@
 import { readFile, writeFile, stat } from 'node:fs/promises';
 import { join as pathJoin, basename } from 'node:path';
 import { parse as yamlParse } from 'yaml';
-import { doGenDataWork } from './_template.js';
+import { doGenDataWork } from './util';
 
 const POST_DIR = process.env.POST_DIR!;
 const DATA_DIR = process.env.DATA_DIR!;
@@ -10,7 +10,7 @@ const CONT_DIR = process.env.CONT_DATA_DIR!;
 const TOC_DIR = process.env.TOC_DATA_DIR!;
 
 export async function genPostData() {
-  const postNameAll = [];
+  const postNameAll: string[] = [];
 
   await doGenDataWork({
     sourceDir: POST_DIR,

@@ -3,13 +3,13 @@ import { execSync } from 'node:child_process';
 const args = process.argv.slice(2);
 const dev = ['-d', '--dev'].some(opt => args.includes(opt));
 
-let cmd = 'node --env-file=.env';
+let cmd = 'tsx --env-file=.env';
 
 if (dev) {
   cmd += ' --env-file=.env.development';
 }
 
-cmd += ' scripts/dist';
+cmd += ' scripts/gen/entry.ts';
 
 try {
   execSync(cmd, { stdio: 'inherit' });

@@ -1,6 +1,6 @@
 import { readFile, writeFile } from 'node:fs/promises';
 import { join as pathJoin } from 'node:path';
-import { doGenDataWork } from './_template.js';
+import { doGenDataWork } from './util';
 
 const DATA_DIR = process.env.DATA_DIR!;
 const META_DIR = process.env.META_DATA_DIR!;
@@ -27,13 +27,13 @@ export async function genStatData() {
         if (!cateStatMap.has(category)) {
           cateStatMap.set(category, 0);
         }
-        cateStatMap.set(category, cateStatMap.get(category) + 1);
+        cateStatMap.set(category, cateStatMap.get(category)! + 1);
 
         for (const tag of tags) {
           if (!tagStatMap.has(tag)) {
             tagStatMap.set(tag, 0);
           }
-          tagStatMap.set(tag, tagStatMap.get(tag) + 1);
+          tagStatMap.set(tag, tagStatMap.get(tag)! + 1);
         }
       }
     },
