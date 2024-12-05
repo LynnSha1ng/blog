@@ -31,13 +31,13 @@ await sleep(1000);
 .blog-content {
   @include flex;
   column-gap: 12px;
-  margin: 12px 0;
+  margin-top: 12px;
   padding: 0 12px;
   border-radius: 12px;
 }
 
 .pos-right-fill {
-  flex-grow: 1;
+  flex: 1;
   order: 1;
 
   @include screenBelow($lg) {

@@ -97,6 +97,16 @@ const cancelAndBack = async (close: () => void) => {
     padding: revert;
     list-style-type: revert;
   }
+
+  code {
+    font-family: 'Consolas';
+
+    &:not([class^='hljs language-']) {
+      padding: 2px 4px;
+      border-radius: 8px;
+      background-color: var(--bg-3);
+    }
+  }
 }
 
 .error-dialog-btn {

@@ -6,7 +6,7 @@
 
 <style lang="scss">
 .blog-about {
-  min-height: calc(100dvh - $nav-h - $footer-h - 12px * 2);
+  min-height: $scr-h-without-nav-footer;
   margin-top: 12px;
   padding: 0 12px;
 }
