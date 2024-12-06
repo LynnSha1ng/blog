@@ -6,7 +6,7 @@
 
 <style lang="scss">
 .blog-about {
-  min-height: $scr-h-without-nav-footer;
+  min-height: $scr-h-main-content;
   margin-top: 12px;
   padding: 0 12px;
 }

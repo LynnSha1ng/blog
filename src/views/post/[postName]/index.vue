@@ -30,7 +30,6 @@ import { useRoute, useRouter } from 'vue-router';
 import { marked } from '@/plugins/marked';
 import { fetchWholePost } from '@/api';
 import { usePostStore } from '@/stores';
-import { sleep } from '@/utils/tool';
 
 const route = useRoute();
 const router = useRouter();
@@ -64,10 +63,7 @@ const getPostData = async () => {
 
 onMounted(getPostData);
 watch(() => route.params.postName, getPostData);
-onUnmounted(async () => {
-  await sleep(350); // 等待过渡动画
-  resetPostInfo();
-});
+onUnmounted(resetPostInfo);
 
 const cancelAndBack = async (close: () => void) => {
   close();

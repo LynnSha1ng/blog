@@ -25,7 +25,7 @@ await sleep(1000);
 
 <style lang="scss">
 .blog-home {
-  min-height: $scr-h-without-nav;
+  min-height: $scr-h-main-content;
 }
 
 .blog-content {
@@ -39,9 +39,5 @@ await sleep(1000);
 .pos-right-fill {
   flex: 1;
   order: 1;
-
-  @include screenBelow($lg) {
-    width: 100%;
-  }
 }
 </style>

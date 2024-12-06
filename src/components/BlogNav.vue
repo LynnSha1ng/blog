@@ -81,7 +81,7 @@
       </WithDrawer>
     </ul>
   </nav>
-  <div class="top-nav-placeholder" v-show="!atPostPage"></div>
+  <div class="top-nav-placeholder"></div>
 </template>
 
 <script setup lang="ts">
@@ -103,15 +103,10 @@ import BloggerCard from './BloggerCard.vue';
 import WithDrawer from './WithDrawer.vue';
 
 import { ref, computed, onBeforeMount } from 'vue';
-import { storeToRefs } from 'pinia';
 import { useEventListener, useDebounceFn, useThrottleFn } from '@vueuse/core';
-import { usePostStore } from '@/stores';
 import { fetchRandomPostName } from '@/api';
 
 // nav主逻辑
-const postBannerStore = usePostStore();
-const { atPostPage } = storeToRefs(postBannerStore);
-
 const showNav = ref(true);
 const lastScrollY = ref(0);
 const cssNavTransY = computed(() => (showNav.value ? '0' : '-100%'));

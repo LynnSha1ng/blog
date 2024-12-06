@@ -53,7 +53,7 @@ const itemsMid = [
 
 <style lang="scss">
 .loading-placeholder {
-  height: $scr-h-without-nav-footer;
+  height: $scr-h-main-content;
   margin-top: 12px;
 }
 
