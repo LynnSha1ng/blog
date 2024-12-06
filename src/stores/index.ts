@@ -1,5 +1,4 @@
-import { ref, shallowReactive, computed } from 'vue';
-import { useRoute } from 'vue-router';
+import { ref, shallowReactive } from 'vue';
 import { defineStore } from 'pinia';
 import { sleep, staticResUrl } from '@/utils/tool';
 
@@ -15,27 +14,23 @@ export const usePostStore = defineStore('post', () => {
     mTime: '',
   };
 
-  const route = useRoute();
-
-  const ready = ref(false);
+  const infoLoaded = ref(false);
   const postInfo = shallowReactive<Blog.Post.Meta>({ ..._postInfoDefault });
-  const atPostPage = computed(() => route.name === ':postName');
 
-  function setPostInfo(newVal: Blog.Post.Meta | object) {
+  function setPostInfo(newVal: Blog.Post.Meta) {
     Object.assign(postInfo, newVal);
-    ready.value = true;
+    infoLoaded.value = true;
   }
 
   async function resetPostInfo() {
-    await sleep(350); //过渡动画结束后再重置图片
+    await sleep(350); // 等待过渡动画结束
     Object.assign(postInfo, _postInfoDefault);
-    ready.value = false;
+    infoLoaded.value = false;
   }
 
   return {
-    ready,
+    infoLoaded,
     postInfo,
-    atPostPage,
     setPostInfo,
     resetPostInfo,
   };

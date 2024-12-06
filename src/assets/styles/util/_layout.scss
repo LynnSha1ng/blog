@@ -4,5 +4,4 @@ $nav-h: 60px;
 $footer-h: 100px;
 
 $scr-w-max: $two-col-post-w-max * 2 + $side-card-w + 12px * 4;
-$scr-h-without-nav: calc(100dvh - $nav-h - 12px * 2);
-$scr-h-without-nav-footer: calc(100dvh - $nav-h - $footer-h - 12px * 2);
+$scr-h-main-content: calc(100dvh - $nav-h - $footer-h - 12px * 2);

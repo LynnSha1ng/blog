@@ -2,13 +2,13 @@
   <section
     :class="{
       'post-banner': true,
-      '--shown': atPostPage,
+      '--shown': $route.name === ':postName',
     }">
     <img class="cover-img" :src="postInfo.coverUrl" />
 
     <div class="banner-mask"></div>
 
-    <header class="post-info" v-show="ready">
+    <header class="post-info" v-show="infoLoaded">
       <h1 class="post-title">{{ postInfo.title }}</h1>
 
       <div class="post-meta">
@@ -52,7 +52,7 @@ import { formatDate } from '@/utils/tool';
 
 const postStore = usePostStore();
 const { postInfo } = postStore;
-const { ready, atPostPage } = storeToRefs(postStore);
+const { infoLoaded } = storeToRefs(postStore);
 
 const publishTimeTip = computed(() => {
   if (postInfo.birthTime !== '') {
@@ -74,7 +74,7 @@ const mTimeTip = computed(() => {
   overflow: hidden;
   opacity: 0;
   height: 0;
-  @include transition((height, opacity), 0.45s, -0.1s);
+  @include transition((height, opacity), 0.35s);
   will-change: height, opacity;
 
   &.--shown {
