@@ -1,0 +1,1 @@
+import{_ as e}from"./PostList.vue_vue_type_style_index_0_lang-C0JSUHhJ.js";import{d as a,o as n,k as o,u as t,X as r}from"./index-uMqEsHmy.js";import"./composable-C5Pmg7Gz.js";const f=a({__name:"index",setup(s){return(c,i)=>(n(),o(e,{"item-style":"brief","on-page-change":t(r),"with-criterion":""},null,8,["on-page-change"]))}});export{f as default};

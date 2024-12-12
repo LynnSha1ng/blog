@@ -1,1 +1,0 @@
-import{G as e}from"./GroupingPage-fpzYtjQw.js";import{d as o,o as r,l as t}from"./index-BGCQAOJF.js";import"./composable-CKSXl1UE.js";const m=o({__name:"index",setup(a){return(n,p)=>(r(),t(e,{criterion:"tag"}))}});export{m as default};

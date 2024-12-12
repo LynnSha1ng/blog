@@ -1,0 +1,1 @@
+import{_ as e,a as n,b as t,o as a}from"./index-uMqEsHmy.js";const s={},c={class:"blog-content-about"};function r(l,o){return a(),n("main",c,o[0]||(o[0]=[t("div",null,"about 1",-1),t("div",null,"about 2",-1)]))}const _=e(s,[["render",r]]);export{_ as default};
