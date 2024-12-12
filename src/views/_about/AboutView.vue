@@ -1,13 +1,18 @@
 <template>
-  <main class="blog-about">About</main>
+  <main class="blog-content-about">
+    <div>about 1</div>
+    <div>about 2</div>
+  </main>
 </template>
 
 <script setup lang="ts"></script>
 
 <style lang="scss">
-.blog-about {
+.blog-content-about {
+  @include flex(null, null, column);
+  row-gap: $gap;
   min-height: $scr-h-main-content;
-  margin-top: 12px;
-  padding: 0 12px;
+  margin-top: $gap;
+  padding: 0 $gap;
 }
 </style>

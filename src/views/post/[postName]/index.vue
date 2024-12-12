@@ -73,8 +73,8 @@ const cancelAndBack = async (close: () => void) => {
 
 <style lang="scss">
 .post-md-content {
-  padding: 12px;
-  border-radius: 12px;
+  padding: $gap;
+  border-radius: $gap;
   background-color: var(--bg-2);
 
   h1,
@@ -99,15 +99,22 @@ const cancelAndBack = async (close: () => void) => {
 
     &:not([class^='hljs language-']) {
       padding: 2px 4px;
-      border-radius: 8px;
+      border-radius: $gap-sm;
       background-color: var(--bg-3);
     }
+  }
+
+  .marked-emoji {
+    width: 1em;
+    height: 1em;
+    vertical-align: middle;
+    pointer-events: none;
   }
 }
 
 .error-dialog-btn {
   padding: 4px 16px;
-  border-radius: 8px;
+  border-radius: $gap-sm;
   color: var(--text-white);
   line-height: 1.5;
   @include transition((background-color, color));

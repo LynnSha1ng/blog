@@ -1,5 +1,5 @@
 <template>
-  <section
+  <div
     :class="{
       'post-banner': true,
       '--shown': $route.name === ':postName',
@@ -12,36 +12,36 @@
       <h1 class="post-title">{{ postInfo.title }}</h1>
 
       <div class="post-meta">
-        <div class="date-related">
+        <div class="meta-line">
           <span class="publish-time">
             <i class="meta-icon iconfont icon-calendar"></i>
-            <time class="meta-txt" :datetime="postInfo.birthTime">
+            <time :datetime="postInfo.birthTime">
               {{ publishTimeTip }}
             </time>
           </span>
 
           <span class="last-modify-time">
             <i class="meta-icon iconfont icon-edit"></i>
-            <time class="meta-txt" :datetime="postInfo.birthTime">
+            <time :datetime="postInfo.birthTime">
               {{ mTimeTip }}
             </time>
           </span>
         </div>
 
-        <div class="cont-related">
+        <div class="meta-line">
           <span class="post-length">
             <i class="meta-icon iconfont icon-text"></i>
-            <span class="meta-txt">共字</span>
+            <span>共字</span>
           </span>
 
           <span class="read-time">
             <i class="meta-icon iconfont icon-time"></i>
-            <span class="meta-txt">读完大约需要</span>
+            <span>读完大约需要</span>
           </span>
         </div>
       </div>
     </header>
-  </section>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -92,8 +92,8 @@ const mTimeTip = computed(() => {
   inset: 0;
   background-color: rgba(0, 0, 0, 0.15);
 
-  @include onDarkMode {
-    background-color: rgba(0, 0, 0, 0.35);
+  @media (prefers-color-scheme: dark) {
+    background-color: rgba(0, 0, 0, 0.45);
   }
 }
 
@@ -107,17 +107,13 @@ const mTimeTip = computed(() => {
 .post-meta {
   margin-block-start: 1em;
   text-align: center;
+}
 
-  > * {
-    @include inline-separator('|', 8px, var(--text-white));
-  }
+.meta-line {
+  @include inline-separator('|', $gap-sm, var(--text-white));
 }
 
 .meta-icon {
   margin-inline-end: 4px;
-}
-
-.meta-txt {
-  font-size: 1rem;
 }
 </style>

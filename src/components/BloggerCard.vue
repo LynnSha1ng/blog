@@ -1,5 +1,5 @@
 <template>
-  <section class="blogger-card">
+  <div class="blogger-card">
     <img class="avatar" src="/images/avatar.jpg" alt="头像" />
     <h3 v-show="!brief">临郢夏望</h3>
     <span class="bio" v-show="!brief">谦逊对待未知</span>
@@ -8,7 +8,7 @@
         class="stat-item"
         v-for="(label, key) of statMap"
         :key="`blogger-card-stat-${key}`">
-        <div class="stat-label">{{ label }}</div>
+        <span class="stat-label">{{ label }}</span>
         <div class="stat-total">{{ total[key] ?? '*' }}</div>
       </li>
     </ul>
@@ -18,7 +18,7 @@
       <li class="contact-icon iconfont icon-github"></li>
       <li class="contact-icon iconfont icon-tuite"></li>
     </ul>
-  </section>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -42,7 +42,7 @@ const statMap = {
   @include flex(null, center, column);
   row-gap: 16px;
   padding: 20px;
-  border-radius: 12px;
+  border-radius: $gap;
   background-color: var(--bg-2);
 }
 
@@ -60,7 +60,7 @@ const statMap = {
 .post-stats {
   @include flex(space-around);
   width: 100%;
-  margin-top: 8px;
+  margin-top: $gap-sm;
 }
 
 .stat-item {
@@ -69,11 +69,11 @@ const statMap = {
 }
 
 .stat-label {
-  margin-block-end: 8px;
   font-size: small;
 }
 
 .stat-total {
+  margin-block-start: $gap-sm;
   font-size: large;
   font-weight: bold;
 }

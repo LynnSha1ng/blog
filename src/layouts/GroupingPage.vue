@@ -1,11 +1,11 @@
 <template>
   <section
-    class="content-main-page grouping-page"
+    :class="['c-grouping-page', `--${nameMap[criterion][0]}`]"
     v-if="$route.name === nameMap[criterion][0]"
     v-show="mounted">
-    <h1 class="page-title">
+    <h1 class="c-page-title">
       所有{{ nameMap[criterion][2] }}
-      <hr class="border-grey" />
+      <hr class="c-border-grey" />
     </h1>
 
     <ul class="items">
@@ -66,8 +66,8 @@ const stat = await fetchStat();
 
 .item {
   @include flex(null, center);
-  padding: 12px;
-  border-radius: 12px;
+  padding: $gap;
+  border-radius: $gap;
   font-size: large;
   @include transition((background-color, color), 0.25s);
 

@@ -69,7 +69,7 @@ body {
     'Droid Sans',
     'Helvetica Neue',
     sans-serif;
-  color: var(--text-regular);
+  color: var(--text-normal);
   @include transition((background-color, color), 0.5s);
   -webkit-tap-highlight-color: transparent;
   -webkit-font-smoothing: antialiased;

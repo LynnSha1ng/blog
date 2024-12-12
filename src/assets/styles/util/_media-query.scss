@@ -25,10 +25,3 @@ $xl2: 1280px;
     @content;
   }
 }
-
-// 深色模式查询封装
-@mixin onDarkMode {
-  @media (prefers-color-scheme: dark) {
-    @content;
-  }
-}

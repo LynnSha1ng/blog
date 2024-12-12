@@ -4,7 +4,7 @@
   <Teleport to="body">
     <Transition name="fade">
       <div class="drawer" v-show="open">
-        <div class="screen-mask" @click="open = false"></div>
+        <div class="c-screen-mask" @click="open = false"></div>
 
         <Transition name="drawer-open">
           <div
@@ -35,11 +35,13 @@ const open = defineModel<boolean>({ required: true });
 import { computed } from 'vue';
 
 const translateFrom = computed(() => {
-  if (enterFrom === 'top') return '0, -100%';
-  else if (enterFrom === 'bottom') return '0, 100%';
-  else if (enterFrom === 'left') return '-100%, 0';
-  else if (enterFrom === 'right') return '100%, 0';
-  return '100%, 0';
+  const directionMap = {
+    top: '0, -100%',
+    bottom: '0, 100%',
+    left: '-100%, 0',
+    right: '100%, 0',
+  };
+  return directionMap[enterFrom] || '100%, 0';
 });
 </script>
 
@@ -54,29 +56,20 @@ const translateFrom = computed(() => {
   position: absolute;
   width: var(--drawer-width);
   height: var(--drawer-height);
-  padding: 12px;
-  border-radius: 12px;
+  padding: $gap;
+  border-radius: $gap;
   background-color: var(--bg-2);
   transform: translate(0, 0);
 
-  &.--from-top {
-    top: 0;
-    width: 100%;
-  }
-
-  &.--from-bottom {
-    bottom: 0;
-    width: 100%;
-  }
-
-  &.--from-left {
-    left: 0;
-    height: 100%;
-  }
-
-  &.--from-right {
-    right: 0;
-    height: 100%;
+  @each $direction in top, bottom, left, right {
+    &.--from-#{$direction} {
+      #{$direction}: 0;
+      @if $direction == top or $direction == bottom {
+        width: 100%;
+      } @else {
+        height: 100%;
+      }
+    }
   }
 }
 </style>
@@ -91,6 +84,7 @@ const translateFrom = computed(() => {
 .drawer-open-leave-active {
   @include transition(transform);
 }
+
 .drawer-open-enter-from,
 .drawer-open-leave-to {
   transform: translate(var(--drawer-translate-from));

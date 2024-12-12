@@ -12,7 +12,7 @@
         }"
         @before-leave="setRelativeTop"
         v-if="mounted">
-        <section class="info-card" key="side-card-announcement">
+        <div class="info-card" key="side-card-announcement">
           <h3>
             <i
               class="title-icon shake-loudspeaker iconfont icon-zizhutuiguang"></i>
@@ -22,9 +22,9 @@
             <p>欢迎来到我的个人博客！</p>
             <p>本博客还在建设中，正在积极优化浏览体验~</p>
           </div>
-        </section>
+        </div>
 
-        <section
+        <div
           class="info-card"
           v-if="$route.name !== 'categories'"
           key="side-card-categories">
@@ -58,9 +58,9 @@
             v-if="cateHasMore">
             查看更多
           </RouterLink>
-        </section>
+        </div>
 
-        <section
+        <div
           class="info-card"
           v-if="$route.name !== 'tags'"
           key="side-card-tags">
@@ -91,7 +91,7 @@
           <RouterLink :to="{ name: 'tags' }" class="has-more" v-if="tagHasMore">
             查看更多
           </RouterLink>
-        </section>
+        </div>
       </TransitionGroup>
     </aside>
   </Transition>
@@ -156,7 +156,7 @@ const setRelativeTop = (targetEl: Element) => {
 <style lang="scss" scoped>
 .side-cards {
   flex-shrink: 0;
-  width: $side-card-w;
+  width: $w-side-card;
   @include screenBelow($lg) {
     display: none;
   }
@@ -164,10 +164,10 @@ const setRelativeTop = (targetEl: Element) => {
 
 .sticky-cards {
   @include flex(null, null, column);
-  row-gap: 12px;
+  row-gap: $gap;
   position: sticky;
-  top: 12px;
-  margin-top: 12px;
+  top: $gap;
+  margin-top: $gap;
 }
 
 .info-card {
@@ -175,7 +175,7 @@ const setRelativeTop = (targetEl: Element) => {
   row-gap: 16px;
   width: 100%;
   padding: 20px;
-  border-radius: 12px;
+  border-radius: $gap;
   background-color: var(--bg-2);
 }
 
@@ -206,7 +206,7 @@ const setRelativeTop = (targetEl: Element) => {
 }
 
 .title-label {
-  margin-inline-start: 8px;
+  margin-inline-start: $gap-sm;
 }
 
 .announcement-content {
@@ -217,13 +217,13 @@ const setRelativeTop = (targetEl: Element) => {
 
 .categories {
   @include flex(null, null, column);
-  row-gap: 8px;
+  row-gap: $gap-sm;
 }
 
 .category-item {
   @include flex(space-between, center);
-  padding: 8px;
-  border-radius: 8px;
+  padding: $gap-sm;
+  border-radius: $gap-sm;
   font-weight: bold;
   @include transition(background-color, 0.25s);
 
@@ -238,12 +238,12 @@ const setRelativeTop = (targetEl: Element) => {
 
 .tags {
   @include flex(null, null, wrap);
-  gap: 8px;
+  gap: $gap-sm;
 }
 
 .tag-item {
-  padding: 8px;
-  border-radius: 8px;
+  padding: $gap-sm;
+  border-radius: $gap-sm;
   @include transition(background-color, 0.25s);
 
   &:hover {

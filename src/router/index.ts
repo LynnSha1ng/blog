@@ -1,6 +1,8 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
 import { generateRoutes } from './generator';
 
+const routeNoSmooth = [':postName'];
+
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
   routes: [
@@ -12,7 +14,7 @@ const router = createRouter({
         {
           path: '',
           name: 'homeView',
-          component: () => import('@/views/HomeView.vue'),
+          component: () => import('@/views/_home/HomeView.vue'),
         },
         ...generateRoutes({
           rootAsParent: true,
@@ -30,7 +32,6 @@ const router = createRouter({
       return savedPosition;
     }
 
-    const routeNoSmooth = [':postName'];
     const behavior = routeNoSmooth.includes(to.name!.toString())
       ? 'auto'
       : 'smooth';
@@ -41,4 +42,5 @@ const router = createRouter({
     };
   },
 });
+
 export default router;

@@ -3,7 +3,7 @@
     <template v-if="Component">
       <BlogNav :title :itemsMid />
 
-      <Transition name="fade" mode="out-in" :duration="150">
+      <Transition name="fade" mode="out-in">
         <Suspense>
           <component :is="Component" />
           <template #fallback>
@@ -54,7 +54,7 @@ const itemsMid = [
 <style lang="scss">
 .loading-placeholder {
   height: $scr-h-main-content;
-  margin-top: 12px;
+  margin-top: $gap;
 }
 
 .loading {

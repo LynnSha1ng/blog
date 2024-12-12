@@ -1,8 +1,8 @@
 <template>
-  <div class="content-main-page friend-links" v-show="mounted">
-    <h1 class="page-title">
+  <div class="c-grouping-page --friend-links" v-show="mounted">
+    <h1 class="c-page-title">
       <span class="title-label">友情链接</span>
-      <hr class="border-grey" />
+      <hr class="c-border-grey" />
     </h1>
 
     <ul class="links">
@@ -43,13 +43,13 @@ const data = await fetchLinkExchange();
 </script>
 
 <style lang="scss" scoped>
-$item-padding: 8px;
+$item-padding: $gap-sm;
 $logo-size: 60px;
 $logo-ml: 16px;
 $logo-border-w: 4px;
 
-$trans-duration: 0.5s;
-$trans-delay: 0.2s;
+$duration: 0.5s;
+$delay: 0.2s;
 
 $bg-size: $logo-size + 2 * $logo-border-w;
 $bg-pos-l: $item-padding + ($logo-ml - $logo-border-w);
@@ -61,13 +61,13 @@ $info-abs-w-max: calc(100% - 2 * $item-padding);
 $bg-hover-w: calc(100% + $w-left-all);
 
 @mixin set-transition($property...) {
-  @include transition($property, $trans-duration, $trans-delay);
+  @include transition($property, $duration, $delay);
 }
 
 .links {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
+  gap: $gap;
 
   @include screenBelow($xl) {
     grid-template-columns: repeat(2, 1fr);
@@ -82,7 +82,7 @@ $bg-hover-w: calc(100% + $w-left-all);
   overflow: hidden;
   height: 128px;
   border: 3px solid var(--bg-3);
-  border-radius: 12px;
+  border-radius: $gap;
 
   &:hover {
     .item-bg {
@@ -103,11 +103,11 @@ $bg-hover-w: calc(100% + $w-left-all);
 
   &:not(:hover) {
     .item-bg {
-      animation: bounce-back $trans-duration * 2 ease $trans-delay backwards;
+      animation: bounce-back $duration * 2 ease $delay backwards;
     }
 
     .logo-img {
-      animation: rotate-back $trans-duration * 2 ease $trans-delay backwards;
+      animation: rotate-back $duration * 2 ease $delay backwards;
     }
   }
 }
@@ -165,7 +165,7 @@ $bg-hover-w: calc(100% + $w-left-all);
     bottom: 0;
     width: 100px;
     height: 100px;
-    border-radius: 12px;
+    border-radius: $gap;
     transform: translate(20px, 20px);
     filter: blur(16px);
     animation: none !important;
@@ -192,7 +192,7 @@ $bg-hover-w: calc(100% + $w-left-all);
 }
 
 .tagline {
-  margin-block-start: 12px;
+  margin-block-start: $gap;
 }
 
 @keyframes bounce-back {

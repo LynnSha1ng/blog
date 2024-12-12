@@ -1,7 +1,7 @@
 <template>
   <nav
     :class="{
-      'top-nav': true,
+      'blog-nav': true,
       'shadow-bottom': showNav,
     }"
     :style="{
@@ -55,7 +55,7 @@
           <Suspense>
             <BloggerCard brief />
           </Suspense>
-          <hr class="border-grey" />
+          <hr class="c-border-grey" />
           <ul class="menu-items">
             <RouterLink
               v-for="item in itemsMid"
@@ -81,7 +81,7 @@
       </WithDrawer>
     </ul>
   </nav>
-  <div class="top-nav-placeholder"></div>
+  <div class="blog-nav-placeholder"></div>
 </template>
 
 <script setup lang="ts">
@@ -152,18 +152,18 @@ const menuOpen = ref(false);
 </script>
 
 <style lang="scss" scoped>
-.top-nav-placeholder {
-  height: $nav-h;
+.blog-nav-placeholder {
+  height: $h-nav;
 }
 
-.top-nav {
+.blog-nav {
   position: fixed;
   z-index: 1145;
   @include flex(space-between, center);
   width: 100%;
-  height: $nav-h;
+  height: $h-nav;
   max-width: $scr-w-max;
-  padding: 0 12px;
+  padding: 0 $gap;
   background-color: color-mix(in oklch, var(--bg-2), transparent 25%);
   transform: translateY(var(--nav-trans-y));
   @include transition((background-color, transform, box-shadow));
@@ -171,7 +171,7 @@ const menuOpen = ref(false);
 
 .nav-items {
   @include flex;
-  gap: 8px;
+  gap: $gap-sm;
 
   &.--pc-only {
     position: absolute;
@@ -187,7 +187,7 @@ const menuOpen = ref(false);
 .nav-item {
   --color-grow-line: var(--primary);
 
-  padding: 8px;
+  padding: $gap-sm;
 
   &:hover {
     color: var(--primary);
@@ -205,19 +205,19 @@ const menuOpen = ref(false);
 }
 
 .nav-item-label {
-  margin-inline-start: 8px;
+  margin-inline-start: $gap-sm;
 }
 
 .menu-items {
   @include flex(null, null, column);
-  row-gap: 8px;
+  row-gap: $gap-sm;
   margin-top: 20px;
 }
 
 .menu-item {
   @include flex(null, center);
-  padding: 12px;
-  border-radius: 12px;
+  padding: $gap;
+  border-radius: $gap;
   background-color: var(--bg-2);
   vertical-align: middle;
   @include transition((background-color, color));
@@ -233,6 +233,24 @@ const menuOpen = ref(false);
 }
 
 .menu-item-label {
-  margin-inline-start: 1rem;
+  margin-inline-start: 1em;
+}
+
+.shadow-bottom {
+  box-shadow: 0 3px 6px -3px rgba(0, 0, 0, 0.25);
+}
+
+.underline-grow {
+  --_color: var(--color-grow-line, var(--text-normal));
+  background: linear-gradient(var(--_color), var(--_color)) no-repeat right
+    bottom;
+  background-size: 0 4px;
+  @include transition((background-size, color, box-shadow), 0.5s);
+  contain: content;
+
+  &:hover {
+    background-position-x: left;
+    background-size: 100% 4px;
+  }
 }
 </style>

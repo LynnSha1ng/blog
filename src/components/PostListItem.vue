@@ -84,8 +84,8 @@ import { formatDate } from '@/utils/tool';
 <style lang="scss" scoped>
 .post-item {
   overflow: hidden;
-  max-width: $two-col-post-w-max;
-  border-radius: 12px;
+  max-width: $w-max-two-col-post;
+  border-radius: $gap;
   background-color: var(--bg-2);
 
   @include screenBelow($xl2) {
@@ -140,16 +140,16 @@ import { formatDate } from '@/utils/tool';
 
   &.--brief {
     @include flex;
-    column-gap: 8px;
+    column-gap: $gap-sm;
     min-height: 120px;
-    padding: 8px;
+    padding: $gap-sm;
 
     .post-cover {
       flex-basis: 40%;
     }
 
     .cover-img {
-      border-radius: 8px;
+      border-radius: $gap-sm;
     }
 
     .post-info {
@@ -169,12 +169,12 @@ import { formatDate } from '@/utils/tool';
 
     .tags {
       @include flex(null, center, wrap);
-      row-gap: 8px;
+      row-gap: $gap-sm;
     }
 
     .tag {
-      margin-inline-end: 8px;
-      padding-inline: 8px;
+      margin-inline-end: $gap-sm;
+      padding-inline: $gap-sm;
       border-radius: 1em;
       background-color: var(--bg-3);
 

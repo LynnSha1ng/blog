@@ -4,7 +4,7 @@
   <Teleport to="body">
     <Transition name="fade">
       <div class="dialog" v-show="open">
-        <div class="screen-mask" @click="handleClose"></div>
+        <div class="c-screen-mask" @click="handleClose"></div>
 
         <Transition name="fade-slide-y" appear>
           <div class="dialog-main" :="$attrs">
@@ -38,7 +38,7 @@ defineOptions({
 const { beforeClose } = defineProps<{
   title?: string;
   tip?: string;
-  beforeClose?: (done: () => void) => void;
+  beforeClose?: (close: () => void) => void;
 }>();
 
 const open = defineModel<boolean>({ required: true });
@@ -54,6 +54,11 @@ const handleClose = () => {
 </script>
 
 <style lang="scss">
+@use 'sass:math';
+
+$sz-btn-icon: 16px;
+$sz-cancel-btn: 25px;
+
 .dialog {
   @include flex(center, center);
   position: fixed;
@@ -64,29 +69,27 @@ const handleClose = () => {
 .dialog-main {
   position: absolute;
   width: 75%;
-  max-width: 520px;
-  padding: 12px;
-  border-radius: 12px;
+  max-width: 600px;
+  padding: $gap;
+  border-radius: $gap;
   background-color: var(--bg-2);
 }
 
 .dialog-top {
-  @include flex(space-between);
-  min-height: 1.17rem;
+  @include flex;
 }
 
 .dialog-title {
-  width: calc(100% - 25px);
+  width: calc(100% - $sz-cancel-btn);
 }
 
 .dialog-cancel-btn {
-  padding: 4.5px;
-
+  padding: math.div($sz-cancel-btn - $sz-btn-icon, 2);
   color: var(--text-grey);
 }
 
 .dialog-content {
-  margin: 12px 0;
+  margin: $gap 0;
 }
 
 .dialog-bottom {

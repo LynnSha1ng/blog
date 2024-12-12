@@ -14,12 +14,12 @@ const currentYear = new Date().getFullYear();
 <style lang="scss">
 .blog-footer {
   @include flex(center, center);
-  height: $footer-h;
-  margin-top: 12px;
+  height: $h-footer;
+  margin-top: $gap;
   background-color: var(--bg-2);
 }
 
 .footer-title {
-  @include inline-separator('|', 8px);
+  @include inline-separator('|', $gap-sm);
 }
 </style>

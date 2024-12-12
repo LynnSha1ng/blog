@@ -25,10 +25,9 @@
   --bg-4: var(--light-4);
 
   --text-white: var(--light-2);
-  --text-regular: var(--dark-3);
-  --text-grey: var(--grey-light);
 
-  --text-hover-primary: var(--warning);
+  --text-normal: var(--dark-3);
+  --text-grey: var(--grey-light);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -38,7 +37,7 @@
     --bg-3: var(--dark-3);
     --bg-4: var(--dark-4);
 
-    --text-regular: var(--light-3);
+    --text-normal: var(--light-3);
     --text-grey: var(--grey-dark);
   }
 }

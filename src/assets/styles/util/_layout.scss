@@ -1,7 +1,12 @@
-$side-card-w: 300px;
-$two-col-post-w-max: 520px;
-$nav-h: 60px;
-$footer-h: 100px;
+// 常用间隔与圆角半径
+$gap-sm: 8px;
+$gap: 12px;
 
-$scr-w-max: $two-col-post-w-max * 2 + $side-card-w + 12px * 4;
-$scr-h-main-content: calc(100dvh - $nav-h - $footer-h - 12px * 2);
+// 页面各主要部分的宽高
+$w-side-card: 300px;
+$w-max-two-col-post: 520px;
+$h-nav: 60px;
+$h-footer: 100px;
+
+$scr-w-max: $w-max-two-col-post * 2 + $w-side-card + $gap * 4;
+$scr-h-main-content: calc(100dvh - $h-nav - $h-footer - $gap * 2);

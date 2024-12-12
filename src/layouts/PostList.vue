@@ -5,7 +5,7 @@
     v-show="mounted">
     <h1 v-show="listTitle">
       {{ listTitle }}
-      <hr class="border-grey" />
+      <hr class="c-border-grey" />
     </h1>
 
     <ul :class="['post-list', `--${itemStyle}`]">
@@ -216,14 +216,10 @@ const pageJump = (e: Event) => {
 </script>
 
 <style lang="scss">
-.post-list-wrapper {
-  overflow: hidden;
-}
-
 .post-list {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
+  gap: $gap;
 
   &.--detailed {
     @include screenBelow($xl2) {
@@ -240,15 +236,15 @@ const pageJump = (e: Event) => {
 
 .pagination {
   @include flex(center, center);
-  gap: 8px;
-  margin: 12px 0;
+  gap: $gap-sm;
+  margin: $gap 0;
 }
 
 .pagination-btn {
-  padding: 12px;
-  border-radius: 12px;
+  padding: $gap;
+  border-radius: $gap;
   background-color: var(--bg-3);
-  color: var(--text-regular);
+  color: var(--text-normal);
   @include transition((background-color, color));
 
   &.--disabled {
@@ -264,18 +260,18 @@ const pageJump = (e: Event) => {
 }
 
 .input-index {
-  width: calc(12px * 2 + 2rem);
-  padding: 12px;
+  width: calc($gap * 2 + 2rem);
+  padding: $gap;
   border: 2px solid var(--bg-2);
-  border-radius: 12px;
+  border-radius: $gap;
   outline: 1px solid transparent;
   background-color: transparent;
-  color: var(--text-regular);
+  color: var(--text-normal);
   text-align: center;
   @include transition(outline, 0.15s);
 
   &::placeholder {
-    color: var(--text-regular);
+    color: var(--text-normal);
   }
 
   &:focus {
@@ -289,7 +285,6 @@ const pageJump = (e: Event) => {
   &::-webkit-inner-spin-button,
   &::-webkit-outer-spin-button {
     -webkit-appearance: none;
-    margin: 0;
   }
 }
 </style>
